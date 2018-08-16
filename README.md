@@ -1,5 +1,5 @@
 # aki-api (based off of the akinator-api which did not seem to get updates)
-[![npm version](https://badge.fury.io/js/akinator-api.svg)](https://badge.fury.io/js/akinator-api)
+<!-- [![npm version](https://badge.fury.io/js/akinator-api.svg)](https://badge.fury.io/js/akinator-api) -->
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 An api for Akinator based in NodeJS.
