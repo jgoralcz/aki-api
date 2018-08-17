@@ -82,12 +82,12 @@ const data = await aki.start(region);
 }
 ```
 
-#### Example Code for Answer using callbacks
+#### Example Code for Step using callbacks
 
 ```js
 const aki = require('aki-api');
 
-aki.answer(region, session, signature, answerid, step, (next, error) => {
+aki.step(region, session, signature, answerId, step, (next, error) => {
   if (error) {
     console.log(error);
   } else {
@@ -96,12 +96,12 @@ aki.answer(region, session, signature, answerid, step, (next, error) => {
 });
 ```
 
-#### Example Code for Answer using promises
+#### Example Code for Step using promises
 
 ```js
 const aki = require('aki-api');
 
-const nextInfo = await aki.answer(region, session, signature, answerid, step);
+const nextInfo = await aki.step(region, session, signature, answerId, step);
 ```
 
 #### Example Code for Win using callbacks
@@ -131,7 +131,7 @@ const win = await aki.win(region, session, signature, step);
 ```js
 const aki = require('aki-api');
 
-aki.cancel(region, session, signature, answerid, step, (next, error) => {
+aki.cancel(region, session, signature, answerId, step, (next, error) => {
   if (error) {
     console.log(error);
   } else {
@@ -146,6 +146,6 @@ aki.cancel(region, session, signature, answerid, step, (next, error) => {
 ```js
 const aki = require('aki-api');
 
-const previousStep = await aki.cancel(region, session, signature, answerid, step);
+const previousStep = await aki.cancel(region, session, signature, answerId, step);
 ```
 
