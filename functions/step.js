@@ -33,7 +33,7 @@ module.exports = async (region, session, signature, answerId, step, callback) =>
     if(callback != null) {
         if (json.completion === 'OK') {
             try {
-                callback(jsonComplete1(json, step));
+                callback(jsonComplete(json, step));
             } catch (e) {
                 console.error(e);
                 callback(json);
