@@ -17,8 +17,8 @@ exports.start = function (region, callback) {
  * @param step the step the akinator is on in the game session.
  * @param callback the callback function, or promise if none is provided.
  */
-exports.answer = function (region, session, signature, answerId, step, callback) {
-    return require('./functions/answer')(region, session, signature, answerId, step, callback);
+exports.step = function (region, session, signature, answerId, step, callback) {
+    return require('./functions/step')(region, session, signature, answerId, step, callback);
 };
 
 /**

@@ -1,8 +1,8 @@
-const aki-api = require('./index');
+const aki = require('./index');
 
 // List of Regions
 /*
-   us - English
+   en - English
    de - German
    fr - French
    in - Hindi
@@ -20,27 +20,58 @@ const aki-api = require('./index');
    tr - Turkish
 */
 
-answerid = '0'
-step = '0'
+
+//start off the game, start does not have these properties due to the website.
+let answerId = 0;
+let step = 0;
 
 
 // Example
-api.start('us', (gamedata, error) => {
+aki.start('en', (gd, error) => {
   if (error) {
     console.log(error);
   } else {
-    gd = JSON.parse(gamedata)
-    api.answer('us', gd.session, gd.signature, answerid, step, (next, error) => {
+    aki.step('en', gd.session, gd.signature, answerId, step, (next, error) => {
       if (error) {
-
+        console.error(error);
       } else {
         console.log(next);
         step++;
       }
-    })
+    });
   }
+});
+
+//example 2
+const testGame = async (region) => {
+
+  const startGame = await aki.start(region);
+
+  console.log("game started: " + JSON.stringify(startGame, null, 2));
+
+  if(startGame != null) {
+    let answer = await aki.step(region, startGame.session, startGame.signature, answerId, step);
+    //then use startGame.nextStep;
+
+    console.log("step: " + JSON.stringify(answer, null, 2));
+
+
+    //setup your own 
+    if(answer.progress >= 85) {
+      const guessWin = aki.win(region, startGame.session, startGame.signature, startGame, step+1);
+
+      console.log("I guess: " + guessWin.parameters.elements[0].element.name); //or other element names in the array
+    }
+
+    else {
+      //loop back through the step or use recursion
+    }
+  }
+};
+
+
+//run the test game
+testGame('en').then( () => {
+  console.log('finished');
 })
-
-/*api.answer(session, signature, answerid, (next, error) => {
-
-})*/
+.catch(console.error);

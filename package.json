@@ -13,12 +13,18 @@
   "keywords": [
     "aki",
     "akinator",
-    "magic"
+    "magic",
+    "aki promise",
+    "akinator promise"
   ],
   "author": "Joshua Goralczyk",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/jgoralcz/aki-api/issues"
   },
-  "homepage": "https://github.com/jgoralcz/aki-api#readme"
+  "homepage": "https://github.com/jgoralcz/aki-api#readme",
+  "dependencies": {
+    "request": "^2.88.0",
+    "request-promise": "^4.2.2"
+  }
 }
