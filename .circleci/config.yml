@@ -26,13 +26,6 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
         
-      # run tests!
-	nvm install stable && nvm alias default stable
+      # run tests
       - run: npm install
       - run: npm test
-
-      workflows:
-        build_and_test:
-	  jobs:
-	    -build
-	    -test
