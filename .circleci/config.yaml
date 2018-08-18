@@ -7,7 +7,7 @@ jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: circleci/node:8.8
+      - image: circleci/node:8.2.1
 
     working_directory: ~/repo
 
