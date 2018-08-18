@@ -1,4 +1,4 @@
-const aki = require('./index');
+const aki = require('../index');
 
 // List of Regions
 /*
