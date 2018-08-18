@@ -57,5 +57,5 @@ typings/
 # dotenv environment variables file
 .env
 
-# circle ci
-.circleci
+# node-modules
+node_modules
