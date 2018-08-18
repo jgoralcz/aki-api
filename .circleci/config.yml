@@ -7,7 +7,7 @@ jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: circleci/node:8.8
+      - image: circleci/node:8.2.1
 
     working_directory: ~/repo
 
@@ -26,7 +26,6 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
         
-      # run tests!
-      checkout
+      # run tests
       - run: npm install
       - run: npm test
