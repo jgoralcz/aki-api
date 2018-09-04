@@ -1,4 +1,5 @@
-# aki-api (based off of the akinator-api which the creator did not update)
+# aki-api (AKINATOR)
+[![CircleCI](https://circleci.com/gh/jgoralcz/aki-api/tree/master.svg?style=svg)](https://circleci.com/gh/jgoralcz/aki-api/tree/master)
 [![npm version](https://badge.fury.io/js/aki-api.svg)](https://www.npmjs.com/package/aki-api)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
