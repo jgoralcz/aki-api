@@ -89,7 +89,7 @@ function jsonComplete(json, step) {
     return {
         "answers": ans,
         "currentStep": step,
-        "nextStep": step+1
-        "guessCount": json.parameters.elements.NbObjetsPertinents; //number of guesses akinator holds
+        "nextStep": step+1,
+        "guessCount": json.parameters.NbObjetsPertinents //number of guesses akinator holds
     };
 }
