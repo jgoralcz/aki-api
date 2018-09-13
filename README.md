@@ -12,8 +12,8 @@ This package supports 15 different languages.
 ## Requirements
 | Requirement | Version |
 | ---|---|
-| Node | ^8.8.0 |
-| NPM | ^5.5.1 |
+| Node | ^8.2.1 |
+| NPM | ^5.3.0 |
 
 
 ## Installation

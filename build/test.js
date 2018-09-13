@@ -76,8 +76,8 @@ const testGame = async (region) => {
 
 
 //run the test game
-for(let i = 0; i < region.length; i++) {
-  testGame(region[i]).then( () => {
+for(let i = 0; i < regions.length; i++) {
+  testGame(regions[i]).then( () => {
     console.log('finished');
   })
   .catch(console.error);
