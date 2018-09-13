@@ -5,6 +5,7 @@ const aki = require('../index');
 // List of Regions
 /*
    en - English
+   en2 - English 2nd server
    de - German
    fr - French
    in - Hindi
@@ -26,6 +27,8 @@ const aki = require('../index');
 //start off the game, start does not have these properties due to the website.
 let answerId = 0;
 let step = 0;
+
+const regions = ['en', 'en2', 'ar', 'cn', 'de', 'es', 'fr', 'il', 'it', 'jp', 'kr', 'nl', 'pl', 'pt', 'ru', 'tr'];
 
 
 // Example
@@ -62,7 +65,7 @@ const testGame = async (region) => {
     if(answer.progress >= 85) {
       const guessWin = aki.win(region, startGame.session, startGame.signature, startGame, step+1);
 
-      console.log("I guess: " + guessWin.parameters.elements[0].element.name); //or other element names in the array
+      console.log("I guess: " + guessWin.answers[0].name + "\n" + guessWin.answers[0].absolute_picture_path); //or other element names in the array
     }
 
     else {
@@ -73,7 +76,9 @@ const testGame = async (region) => {
 
 
 //run the test game
-testGame('en').then( () => {
-  console.log('finished');
-})
-.catch(console.error);
+for(let i = 0; i < region.length; i++) {
+  testGame(region[i]).then( () => {
+    console.log('finished');
+  })
+  .catch(console.error);
+}
