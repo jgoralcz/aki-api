@@ -30,8 +30,8 @@ exports.step = function (region, session, signature, answerId, step, callback) {
  * @param step the step the akinator is on in the game session.
  * @param callback the callback function, or promise if none is provided.
  */
-exports.cancel = function (region, session, signature, answerId, step, callback) {
-    return require('./functions/cancel')(region, session, signature, answerId, step, callback);
+exports.back = function (region, session, signature, answerId, step, callback) {
+    return require('./functions/back')(region, session, signature, answerId, step, callback);
 };
 
 

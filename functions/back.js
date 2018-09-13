@@ -84,15 +84,14 @@ module.exports = async (region, session, signature, answerId, step, callback) =>
 function jsonComplete(json, step) {
     let ans = []
     for (let i = 0; i < json.parameters.answers.length; i++) {
-        ans.push(json.parameters.answers[i].answer)
+        ans.push(json.parameters.answers[i].answer);
     }
-    let data = {
+    
+    return {
         "nextQuestion": json.parameters.question,
         "progress": json.parameters.progression,
         "answers": ans,
         "currentStep": step,
         "nextStep": step-1
     };
-
-    return data;
 }

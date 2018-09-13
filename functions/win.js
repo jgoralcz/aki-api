@@ -15,7 +15,7 @@ module.exports = async (region, session, signature, step, callback) => {
     const opts = {
         method: 'GET',
         json: true,
-        //https://srv6.akinator.com:9126/ws/answer?callback=&session=323&signature=343571160&step=0&answer=0
+        //https://srv6.akinator.com:9126/ws/list?callback=&session=323&signature=343571160&step=0&answer=0
         uri: `https://${id}/ws/list?callback=&session=${session}&signature=${signature}&step=${step}`,
         headers: {
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
@@ -32,7 +32,7 @@ module.exports = async (region, session, signature, step, callback) => {
     if(callback != null) {
         if (json.completion === 'OK') {
             try {
-                callback(json);
+                callback(jsonComplete(json, step));
             } catch (e) {
                 console.error(e);
                 callback(json);
@@ -54,7 +54,7 @@ module.exports = async (region, session, signature, step, callback) => {
         return new Promise( (resolve, reject) => {
             if (json.completion === 'OK') {
                 try {
-                    resolve(json);
+                    resolve(jsonComplete(json, step));
                 } catch (e) {
                     console.error(e);
                     reject(json);
@@ -72,4 +72,24 @@ module.exports = async (region, session, signature, step, callback) => {
             }
         });
     }
+}
+
+
+/**
+ * parses out the json info
+ * @param json the json information from the request
+ * @param step the step akinator is working on.
+ */
+function jsonComplete(json, step) {
+    let ans = []
+    for (let i = 0; i < json.parameters.elements.length; i++) {
+        ans.push(json.parameters.elements[i].element);
+    }
+
+    return {
+        "answers": ans,
+        "currentStep": step,
+        "nextStep": step+1
+        "guessCount": json.parameters.elements.NbObjetsPertinents; //number of guesses akinator holds
+    };
 }
