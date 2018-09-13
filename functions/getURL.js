@@ -17,7 +17,7 @@ exports.regionURL = function (region) {
             
         case "en2":
         case "english2":
-            id = "https://srv11.akinator.com:9152";
+            id = "srv11.akinator.com:9152";
             break;
 
         case "ar":
