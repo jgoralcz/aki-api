@@ -77,7 +77,7 @@ module.exports = async (region, callback) => {
 function jsonComplete(json) {
     let ans = [];
     for (let i = 0; i < json.parameters.step_information.answers.length; i++) {
-        ans.push(`${json.parameters.step_information.answers[i].answer}`)
+        ans.push(json.parameters.step_information.answers[i].answer);
     }
     return {
         "session": json.parameters.identification.session,
