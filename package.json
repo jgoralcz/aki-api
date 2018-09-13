@@ -1,7 +1,7 @@
 {
   "name": "aki-api",
-  "version": "1.0.1",
-  "description": "An API for the Akinator in Node. Supports up to 15 languages.",
+  "version": "2.0.0",
+  "description": "An API for Akinator.  Supports up to 15 languages and has two English servers.",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
