@@ -38,7 +38,7 @@ exports.regionURL = function (region) {
 
         case "es":
         case "spanish":
-            id = "srv6.akinator.com:9127";
+            id = "srv11.akinator.com:9151";
             break;
 
         //person, blame akinator not me
