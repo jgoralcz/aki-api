@@ -10,14 +10,15 @@ exports.regionURL = function (region) {
     region = region.toLowerCase();
     //get region based off of input
     switch (region) {
+
         case "en":
         case "english":
-            id = "srv2.akinator.com:9157";
-            break;
-            
-        case "en2":
-        case "english2":
             id = "srv11.akinator.com:9152";
+            break;
+
+        case "en2":
+        case "english":
+            id = "srv6.akinator.com:9126";
             break;
 
         case "ar":
@@ -27,27 +28,34 @@ exports.regionURL = function (region) {
 
         case "cn":
         case "chinese":
-            id = "srv5.akinator.com:9125";
+            id = "srv11.akinator.com:9150";
             break;
 
         case "de":
         case "german":
-            id = "srv7.akinator.com:9145"
+            id = "srv7.akinator.com:9145";
             break;
 
         case "es":
         case "spanish":
-            id = "srv6.akinator.com:9127";
+            id = "srv11.akinator.com:9151";
             break;
 
+        //person, blame akinator not me
         case "fr":
         case "french":
             id = "srv3.akinator.com:9165";
             break;
 
+        //objects
+        case "fr2":
+        case "french":
+            id = "srv3.akinator.com:9167";
+            break;
+
         case "il":
         case "hebrew":
-            id = "srv9.akinator.com:9131";
+            id = "srv4.akinator.com:9170";
             break;
 
         case "it":
@@ -57,7 +65,7 @@ exports.regionURL = function (region) {
 
         case "jp":
         case "japanese":
-            id = "srv10.akinator.com:9120";
+            id = "srv11.akinator.com:9172";
             break;
 
         case "kr":
@@ -90,6 +98,7 @@ exports.regionURL = function (region) {
             id = "srv3.akinator.com:9164";
             break;
 
+        //default case
         default:
             id = "srv11.akinator.com:9152";
             break;

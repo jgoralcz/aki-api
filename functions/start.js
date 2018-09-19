@@ -12,7 +12,7 @@ module.exports = async (region, callback) => {
     const opts = {
         method: 'GET',
         json: true,
-        uri: `https://${id}/ws/new_session?partner=1&player=Thwyster&constraint=ETAT<>'AV'`,
+        uri: `https://${id}/ws/new_session?callback=&partner=&player=website-desktop&uid_ext_session=&frontaddr=NDYuMTA1LjExMC40NQ==&constraint=ETAT<>'AV'`,
         headers: {
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
             'Accept-Encoding': 'gzip, deflate',
