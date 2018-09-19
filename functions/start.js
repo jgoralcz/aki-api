@@ -12,7 +12,13 @@ module.exports = async (region, callback) => {
     const opts = {
         method: 'GET',
         json: true,
-        uri: `https://${id}/ws/new_session?partner=1&player=Thwyster&constraint=ETAT<>'AV'`,
+        uri: `https://${id}/ws/new_session?callback=&partner=&player=website-desktop&uid_ext_session=&frontaddr=NDYuMTA1LjExMC40NQ==&constraint=ETAT<>'AV'`,
+
+        //https:srv3.akinator.com:9165/ws/new_session?callback=jQuery33108894800368673221_1537346531020&partner=1
+        // &player=website-desktop&uid_ext_session=5ba2016060c1a&frontaddr=NDYuMTA1LjExMC40NQ%3D%3D&constraint=ETAT%3C%3E%27AV%27&soft_constraint=&question_filter=&_=1537346531021
+        //https://srv11.akinator.com:9152/ws/new_session?callback=jQuery33107058707669594335_1537345568155&partner=1
+        // &player=website-desktop&uid_ext_session=5ba209f9a6ca5&frontaddr=NDYuMTA1LjExMC40NQ%3D%3D&constraint=ETAT%3C%3E%27AV%27&soft_constraint=&question_filter=&_=1537345568156
+        // uri: `https://${id}/ws/new_session?partner=1&player=Thwyster&constraint=ETAT<>'AV'`,
         headers: {
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
             'Accept-Encoding': 'gzip, deflate',
