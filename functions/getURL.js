@@ -55,7 +55,7 @@ exports.regionURL = function (region) {
 
         case "il":
         case "hebrew":
-            id = "srv4.akinator.com:9170";
+            id = "srv12.akinator.com:9189";
             break;
 
         case "it":
@@ -90,7 +90,7 @@ exports.regionURL = function (region) {
 
         case "ru":
         case "russian":
-            id = "srv5.akinator.com:9124";
+            id = "srv12.akinator.com:9190";
             break;
 
         case "tr":

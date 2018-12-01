@@ -215,7 +215,7 @@ const question = previousStep.nextQuestion;
 {
   "nextQuestion": "Is your character a female?",
   "progress": "2.43520",
-  "answers": [ "Yes", "No", "Don\'t know", "Probably", "Probably not" ],
+  "answers": [ "Yes", "No", "Don't know", "Probably", "Probably not" ],
   "currentStep": 2,
   "nextStep": 1 
 }
