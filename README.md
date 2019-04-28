@@ -28,26 +28,10 @@ This package supports 15 different languages.
 
 ## Usage
 
-#### Example Code for Start using callbacks
-
 ```js
 const aki = require('aki-api');
 
-aki.start(region, (resolve, error) => {
-  if (error) {
-    console.log(error);
-  } else {
-    console.log(resolve);
-  }
-});
-```
-
-#### Example Code for Start using promises
-
-```js
-const aki = require('aki-api');
-
-const data = await aki.start(region);
+const data = await aki.start(region); // must be in async function
 ```
 
 ### Sample for Starting A Game
@@ -69,27 +53,10 @@ const data = await aki.start(region);
 
 
 ### Answer a Question (step)
-
-#### Example Code for Step using callbacks
-
 ```js
 const aki = require('aki-api');
 
-aki.step(region, session, signature, answerId, step, (resolve, error) => {
-  if (error) {
-    console.log(error);
-  } else {
-    console.log(resolve);
-  }
-});
-```
-
-#### Example Code for Step using promises
-
-```js
-const aki = require('aki-api');
-
-const nextInfo = await aki.step(region, session, signature, answerId, step);
+const nextInfo = await aki.step(region, session, signature, answerId, step); // must be in async function
 ```
 
 #### Sample JSON Response
@@ -113,26 +80,10 @@ const nextInfo = await aki.step(region, session, signature, answerId, step);
 ### Win/Show the akinator's guess
 #### To determine a win use the `progress` attribute. I like to do something like `if(nextInfo.progress >= 85)`
 
-#### Example Code for Win using callbacks
-
 ```js
 const aki = require('aki-api');
 
-aki.win(region, session, signature, step, (resolve, error) => {
-  if (error) {
-    console.log(error);
-  } else {
-    console.log(resolve);
-  }
-});
-```
-
-#### Example Code for Win using promises
-
-```js
-const aki = require('aki-api');
-
-const win = await aki.win(region, session, signature, step);
+const win = await aki.win(region, session, signature, step); // must be in async function
 
 //example on getting akinator answers
 const firstGuess = win.answers[0].name;
@@ -181,29 +132,12 @@ const firstGuess = win.answers[0].name;
 };
 ```
 
-
-
-#### Example Code for Back using callbacks (goes back to previous step; manage this on your own)
+#### Example Code for Back (goes back to previous step; manage this on your own)
 
 ```js
 const aki = require('aki-api');
 
-aki.back(region, session, signature, answerId, step, (resolve, error) => {
-  if (error) {
-    console.log(error);
-  } else {
-    console.log(resolve);
-  }
-});
-```
-
-
-#### Example Code for Back using promises (goes back to previous step; manage this on your own)
-
-```js
-const aki = require('aki-api');
-
-const previousStep = await aki.back(region, session, signature, answerId, step);
+const previousStep = await aki.back(region, session, signature, answerId, step); // must be in async function
 
 //getting info from back
 const question = previousStep.nextQuestion;
