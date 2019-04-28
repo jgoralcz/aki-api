@@ -15,8 +15,8 @@ module.exports = async (region, session, signature, step, callback) => {
     const opts = {
         method: 'GET',
         json: true,
-        //https://srv6.akinator.com:9126/ws/list?callback=&session=323&signature=343571160&step=0&answer=0
-        uri: `https://${id}/ws/list?callback=&session=${session}&signature=${signature}&step=${step}`,
+        //https://srv6.akinator.com:9126/ws/list?&session=323&signature=343571160&step=0&answer=0
+        uri: `https://${id}/ws/list?session=${session}&signature=${signature}&step=${step}`,
         headers: {
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
             'Accept-Encoding': 'gzip, deflate',
@@ -26,52 +26,30 @@ module.exports = async (region, session, signature, step, callback) => {
         gzip: true
     }
 
-    //get the json data, and await it
+    // get the json data, and await it
     const json = await request(opts).catch(console.error);
 
-    if(callback != null) {
+    // only using promises now
+    return new Promise((resolve, reject) => {
         if (json.completion === 'OK') {
             try {
-                callback(jsonComplete(json, step));
+                resolve(jsonComplete(json, step));
             } catch (e) {
                 console.error(e);
-                callback(json);
+                reject(json);
             }
         } else if (json.completion === 'KO - SERVER DOWN') {
-            callback(null, `Akinator servers are down for the "${region}" region. Check back later.` + json.completion);
+            reject(`Akinator servers are down for the "${region}" region. Check back later.` + json.completion);
         } else if (json.completion === 'KO - TECHNICAL ERROR') {
-            callback(null, `Akinator's servers have had a technical error for the "${region}" region. Check back later.` + json.completion);
+            reject(`Akinator's servers have had a technical error for the "${region}" region. Check back later.` + json.completion);
         } else if (json.completion === 'KO - INCORRECT PARAMETER') {
-            callback(null, `You inputted a wrong paramater, this could be session, region, or signature.` + json.completion);
+            reject(`You inputted a wrong paramater, this could be session, region, or signature.` + json.completion);
         } else if (json.completion === 'KO - TIMED OUT') {
-            callback(null, 'Your Akinator session has timed out.' + json.completion);
+            reject('Your Akinator session has timed out.' + json.completion);
         } else {
-            callback(null, 'Unknown error has occured. Server response: ' + json.completion);
+            reject('Unknown error has occured. Server response: ' + json.completion);
         }
-    }
-
-    else {
-        return new Promise( (resolve, reject) => {
-            if (json.completion === 'OK') {
-                try {
-                    resolve(jsonComplete(json, step));
-                } catch (e) {
-                    console.error(e);
-                    reject(json);
-                }
-            } else if (json.completion === 'KO - SERVER DOWN') {
-                reject(`Akinator servers are down for the "${region}" region. Check back later.` + json.completion);
-            } else if (json.completion === 'KO - TECHNICAL ERROR') {
-                reject(`Akinator's servers have had a technical error for the "${region}" region. Check back later.` + json.completion);
-            } else if (json.completion === 'KO - INCORRECT PARAMETER') {
-                reject(`You inputted a wrong paramater, this could be session, region, or signature.` + json.completion);
-            } else if (json.completion === 'KO - TIMED OUT') {
-                reject('Your Akinator session has timed out.' + json.completion);
-            } else {
-                reject('Unknown error has occured. Server response: ' + json.completion);
-            }
-        });
-    }
+    });
 }
 
 

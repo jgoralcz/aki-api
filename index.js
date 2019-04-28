@@ -1,10 +1,14 @@
+const startFunc = require('./functions/start.js');
+const stepFunc = require('./functions/step.js');
+const backFunc = require('./functions/back.js');
+const winFunc = require('./functions/win.js');
+
 /**
- * starts the akinator. Creats a unique game session and returns data.
+ * starts the akinator. Creats ax unique game session and returns data.
  * @param regionm the region that akinator supports. English is default.
- * @param callback the callback function, or promise if none is provided.
  */
-exports.start = function (region, callback) {
-    return require('./functions/start')(region, callback);
+exports.start = (region) => {
+    return startFunc(region);
 };
 
 
@@ -15,10 +19,9 @@ exports.start = function (region, callback) {
  * @param signature the akinator signature. Has a unique id.
  * @param answerId the answer the user clicks. Usually yes, no, don't know, probably, or probably not.
  * @param step the step the akinator is on in the game session.
- * @param callback the callback function, or promise if none is provided.
  */
-exports.step = function (region, session, signature, answerId, step, callback) {
-    return require('./functions/step')(region, session, signature, answerId, step, callback);
+exports.step = (region, session, signature, answerId, step) => {
+    return stepFunc(region, session, signature, answerId, step);
 };
 
 /**
@@ -28,10 +31,9 @@ exports.step = function (region, session, signature, answerId, step, callback) {
  * @param signature the akinator signature. Has a unique id.
  * @param answerId the answer the user clicks. Usually yes, no, don't know, probably, or probably not.
  * @param step the step the akinator is on in the game session.
- * @param callback the callback function, or promise if none is provided.
  */
-exports.back = function (region, session, signature, answerId, step, callback) {
-    return require('./functions/back')(region, session, signature, answerId, step, callback);
+exports.back = (region, session, signature, answerId, step) => {
+    return backFunc(region, session, signature, answerId, step);
 };
 
 
@@ -41,17 +43,8 @@ exports.back = function (region, session, signature, answerId, step, callback) {
  * @param session the akinator game session. Has a unique id.
  * @param signature the akinator signature. Has a unique id.
  * @param step the step the akinator is on in the game session.
- * @param callback the callback function, or promise if none is provided.
  */
-exports.win = function (region, session, signature, step, callback) {
-    return require('./functions/win')(region, session, signature, step, callback);
+exports.win = (region, session, signature, step) => {
+    return winFunc(region, session, signature, step);
 };
-
-
-/**
- * gets whatever uri that akinator uses because they seem to change it consistently.
- * @param region The regions aki supports: 'en', 'ar', 'cn', 'de', 'es', 'fr', 'il', 'it', 'jp', 'kr', 'nl', 'pl', 'pt', 'ru', and 'tr'. Default is 'en'
- */
-// exports.regionURL = function (region) {
-// };
 
