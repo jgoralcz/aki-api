@@ -4,12 +4,11 @@ const url = require("./getURL.js");
 /**
  * gets a step for aki by requesting the correct data.
  * @param region the supplied region area.
- * @param session
- * @param signature
+ * @param session the akinator session
+ * @param signature the akinator signature
  * @param step the number of step this is on.
- * @param callback the callback if provided one.
  */
-module.exports = async (region, session, signature, step, callback) => {
+module.exports = async (region, session, signature, step => {
     const id = url.regionURL(region);
 
     const opts = {
@@ -24,7 +23,7 @@ module.exports = async (region, session, signature, step, callback) => {
             'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5376e Safari/8536.25'
         },
         gzip: true
-    }
+    };
 
     // get the json data, and await it
     const json = await request(opts).catch(console.error);
@@ -50,7 +49,7 @@ module.exports = async (region, session, signature, step, callback) => {
             reject('Unknown error has occured. Server response: ' + json.completion);
         }
     });
-}
+};
 
 
 /**
@@ -59,15 +58,11 @@ module.exports = async (region, session, signature, step, callback) => {
  * @param step the step akinator is working on.
  */
 function jsonComplete(json, step) {
-    let ans = []
-    for (let i = 0; i < json.parameters.elements.length; i++) {
-        ans.push(json.parameters.elements[i].element);
-    }
 
     return {
-        "answers": ans,
+        "answers": json.parameters.answers.map( ans => ans.answer) || [],
         "currentStep": step,
         "nextStep": step+1,
-        "guessCount": json.parameters.NbObjetsPertinents //number of guesses akinator holds
+        "guessCount": json.parameters.NbObjetsPertinents // number of guesses akinator holds
     };
 }

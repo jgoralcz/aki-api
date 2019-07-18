@@ -11,7 +11,7 @@ module.exports = async (region) => {
     // request akinator.com/game so we get the uid_ext_session and frontaddr.
     let uid, frontaddr;
     try {
-        const uriObj =  await getSession();
+        const uriObj = await getSession();
         uid = uriObj.uid;
         frontaddr = uriObj.frontaddr;
     }
@@ -31,7 +31,7 @@ module.exports = async (region) => {
             'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5376e Safari/8536.25'
         },
         gzip: true
-    }
+    };
 
     //get the json data, and await it
     const json = await request(opts).catch(console.error);
@@ -55,32 +55,29 @@ module.exports = async (region) => {
             reject(`Unknown error has occured.\n${json.completion}`);
         }
     });
-}
+};
 
 /**
  * parses out the json info
  * @param json the json information from the request
  */
 const jsonComplete = (json) => {
-    let ans = [];
-    for (let i = 0; i < json.parameters.step_information.answers.length; i++) {
-        ans.push(json.parameters.step_information.answers[i].answer);
-    }
+
     return {
-        "session": json.parameters.identification.session,
-        "signature": json.parameters.identification.signature,
-        "question": json.parameters.step_information.question,
+        'session': json.parameters.identification.session,
+        'signature': json.parameters.identification.signature,
+        'question': json.parameters.step_information.question,
         'challenge_auth': json.parameters.identification.challenge_auth,
-        "answers": ans
+        'answers': json.parameters.answers.map( ans => ans.answer) || []
     };
 };
 
 // pattern to match see below for what we're looking for.
-const patternSession = new RegExp("var uid_ext_session = '(.*)'\\;\\n.*var frontaddr = '(.*)'\\;");
+const patternSession = new RegExp("var uid_ext_session = '(.*)';\\n.*var frontaddr = '(.*)';");
 
 /**
  * gets the session uid and frontaddr
- * @returns {Promise<void>}
+ * @returns {Promise<{uid: string, frontaddr: string}>}
  */
 const getSession = async () => {
     let uid = '';

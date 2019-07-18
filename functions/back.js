@@ -24,7 +24,7 @@ module.exports = async (region, session, signature, answerId, step) => {
             'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5376e Safari/8536.25'
         },
         gzip: true
-    }
+    };
 
     //get the json data, and await it
     const json = await request(opts).catch(console.error);
@@ -46,10 +46,10 @@ module.exports = async (region, session, signature, answerId, step) => {
         } else if (json.completion === 'KO - TIMED OUT') {
             reject('Your Akinator session has timed out.' + json.completion);
         } else {
-            reject('Unknown error has occured. Server response: ' + json.completion);
+            reject('Unknown error has occurred. Server response: ' + json.completion);
         }
     });
-}
+};
 
 
 /**
@@ -58,16 +58,12 @@ module.exports = async (region, session, signature, answerId, step) => {
  * @param step the step akinator is working on.
  */
 function jsonComplete(json, step) {
-    let ans = []
-    for (let i = 0; i < json.parameters.answers.length; i++) {
-        ans.push(json.parameters.answers[i].answer);
-    }
-    
+
     return {
-        "nextQuestion": json.parameters.question,
+        'nextQuestion': json.parameters.question,
         "progress": json.parameters.progression,
-        "answers": ans,
-        "currentStep": step,
-        "nextStep": step-1
+        'answers': json.parameters.answers.map( ans => ans.answer) || [],
+        'currentStep': step,
+        'nextStep': step-1
     };
 }
