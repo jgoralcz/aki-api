@@ -1,4 +1,4 @@
-# aki-api (AKINATOR)
+# aki-api (Akinator)
 [![CircleCI](https://circleci.com/gh/jgoralcz/aki-api/tree/master.svg?style=svg)](https://circleci.com/gh/jgoralcz/aki-api/tree/master)
 [![npm version](https://badge.fury.io/js/aki-api.svg)](https://www.npmjs.com/package/aki-api)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
@@ -20,9 +20,11 @@ This package supports 15 different languages.
 
 ``npm i aki-api``
 
-### Regions (en2 is another English server that Akinator supports; use if 'en' ever goes down)
+### Regions (en2, en3 are other English servers that Akinator supports; use if 'en' ever goes down)
 ```
- ['en', 'en2', 'ar', 'cn', 'de', 'es', 'fr', 'il', 'it', 'jp', 'kr', 'nl', 'pl', 'pt', 'ru', 'tr']
+ ['en', 'en2', 'en3', 'en_object', 'en_animals',
+  'ar', 'cn', 'de', 'de_animals' 'es', 'es_animals', 'fr', 'fr_objects', 'fr__animals',
+  'il', 'it', 'it_animals', 'jp', 'jp_animals', 'kr', 'nl', 'pl', 'pt', 'ru', and 'tr']
 ```
 
 
@@ -129,7 +131,7 @@ const firstGuess = win.answers[0].name;
   "currentStep": 18,
   "nextStep": 19,
   "guessCount": 2
-};
+}
 ```
 
 #### Example Code for Back (goes back to previous step; manage this on your own)
