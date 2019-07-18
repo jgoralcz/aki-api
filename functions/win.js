@@ -8,7 +8,7 @@ const url = require("./getURL.js");
  * @param signature the akinator signature
  * @param step the number of step this is on.
  */
-module.exports = async (region, session, signature, step => {
+module.exports = async (region, session, signature, step) => {
     const id = url.regionURL(region);
 
     const opts = {
@@ -28,41 +28,27 @@ module.exports = async (region, session, signature, step => {
     // get the json data, and await it
     const json = await request(opts).catch(console.error);
 
+    if(json == null || !json.completion) {
+        throw new Error(`A problem occurred with making the request.\nRequest Value: ${json}`);
+    }
+
     // only using promises now
-    return new Promise((resolve, reject) => {
-        if (json.completion === 'OK') {
-            try {
-                resolve(jsonComplete(json, step));
-            } catch (e) {
-                console.error(e);
-                reject(json);
-            }
-        } else if (json.completion === 'KO - SERVER DOWN') {
-            reject(`Akinator servers are down for the "${region}" region. Check back later.` + json.completion);
-        } else if (json.completion === 'KO - TECHNICAL ERROR') {
-            reject(`Akinator's servers have had a technical error for the "${region}" region. Check back later.` + json.completion);
-        } else if (json.completion === 'KO - INCORRECT PARAMETER') {
-            reject(`You inputted a wrong paramater, this could be session, region, or signature.` + json.completion);
-        } else if (json.completion === 'KO - TIMED OUT') {
-            reject('Your Akinator session has timed out.' + json.completion);
-        } else {
-            reject('Unknown error has occured. Server response: ' + json.completion);
-        }
-    });
+    if (json.completion === 'OK') {
+        return {
+            "answers": json.parameters.answers.map(ans => ans.answer) || [],
+            "currentStep": step,
+            "nextStep": step + 1,
+            "guessCount": json.parameters.NbObjetsPertinents // number of guesses akinator holds
+        };
+    } else if (json.completion === 'KO - SERVER DOWN') {
+        throw new Error(`Akinator servers are down for the "${region}" region. Check back later. ` + json.completion);
+    } else if (json.completion === 'KO - TECHNICAL ERROR') {
+        throw new Error(`Akinator's servers have had a technical error for the "${region}" region. Check back later. ` + json.completion);
+    } else if (json.completion === 'KO - INCORRECT PARAMETER') {
+        throw new Error(`You inputted a wrong paramater, this could be session, region, or signature. ` + json.completion);
+    } else if (json.completion === 'KO - TIMED OUT') {
+        throw new Error('Your Akinator session has timed out. ' + json.completion);
+    } else {
+        throw new Error('Unknown error has occured. Server response: ' + json.completion);
+    }
 };
-
-
-/**
- * parses out the json info
- * @param json the json information from the request
- * @param step the step akinator is working on.
- */
-function jsonComplete(json, step) {
-
-    return {
-        "answers": json.parameters.answers.map( ans => ans.answer) || [],
-        "currentStep": step,
-        "nextStep": step+1,
-        "guessCount": json.parameters.NbObjetsPertinents // number of guesses akinator holds
-    };
-}

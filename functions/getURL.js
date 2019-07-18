@@ -1,6 +1,9 @@
 /**
  * Returns the id from the correct region.
- * @param region The regions aki supports: 'en', 'ar', 'cn', 'de', 'es', 'fr', 'il', 'it', 'jp', 'kr', 'nl', 'pl', 'pt', 'ru', and 'tr'. Default is 'en'
+ * @param region The regions aki supports: 'en', 'en2', 'en3', 'en_object', 'en_animals',
+ * 'ar', 'cn', 'de', 'de_animals' 'es', 'es_animals', 'fr', 'fr_objects', 'fr__animals',
+ * 'il', 'it', 'it_animals', 'jp', 'jp_animals', 'kr', 'nl', 'pl', 'pt', 'ru', and 'tr'.
+ * Default is 'en'
  * @returns {string}
  */
 exports.regionURL = function (region) {
@@ -30,14 +33,14 @@ exports.regionURL = function (region) {
             break;
 
         // objects
-        case 'en4':
-        case 'english4':
+        case 'en_object':
+        case 'english_objects':
             id = 'srv2.akinator.com:9265';
             break;
 
         // animals
-        case 'en5':
-        case 'english5':
+        case 'en_animals':
+        case 'english_animals':
             id = 'srv2.akinator.com:9255';
             break;
 
@@ -58,8 +61,8 @@ exports.regionURL = function (region) {
             break;
 
         // animals
-        case 'de2':
-        case 'german2':
+        case 'de_animals':
+        case 'german_animals':
             id = 'srv14.akinator.com:9284';
             break;
 
@@ -75,23 +78,21 @@ exports.regionURL = function (region) {
             id = 'srv13.akinator.com:9257';
             break;
 
-
         // character
         case 'fr':
         case 'french':
             id = 'srv3.akinator.com:9217';
             break;
 
-
         // objects
-        case 'fr2':
-        case 'french2':
+        case 'fr_object':
+        case 'french_object':
             id = 'srv3.akinator.com:9218';
             break;
 
         // animals
-        case 'fr3':
-        case 'french3':
+        case 'fr_animals':
+        case 'french_animals':
             id = 'srv3.akinator.com:9259/';
             break;
 
@@ -100,7 +101,6 @@ exports.regionURL = function (region) {
             id = 'srv12.akinator.com:9189';
             break;
 
-
         // characters
         case 'it':
         case 'italian':
@@ -108,8 +108,8 @@ exports.regionURL = function (region) {
             break;
 
         // animals
-        case 'it2':
-        case 'italian2':
+        case 'it_animals':
+        case 'italian_animals':
             id = 'srv9.akinator.com:9261';
             break;
 
@@ -120,8 +120,8 @@ exports.regionURL = function (region) {
             break;
 
         // animals
-        case 'jp2':
-        case 'japanese2':
+        case 'jp_animals':
+        case 'japanese_animals':
             id = 'srv11.akinator.com:9263';
             break;
 

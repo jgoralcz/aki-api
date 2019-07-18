@@ -25,44 +25,30 @@ module.exports = async (region, session, signature, answerId, step) => {
         gzip: true
     };
 
-    //get the json data, and await it
+    // get the json data, and await it
     const json = await request(opts).catch(console.error);
 
-    return new Promise( (resolve, reject) => {
-        if (json.completion === 'OK') {
-            try {
-                resolve(jsonComplete(json, step));
-            } catch (e) {
-                console.error(e);
-                reject(json);
-            }
-        } else if (json.completion === 'KO - SERVER DOWN') {
-            reject(`Akinator servers are down for the "${region}" region. Check back later.` + json.completion);
-        } else if (json.completion === 'KO - TECHNICAL ERROR') {
-            reject(`Akinator's servers have had a technical error for the "${region}" region. Check back later.` + json.completion);
-        } else if (json.completion === 'KO - INCORRECT PARAMETER') {
-            reject(`You inputted a wrong paramater, this could be session, region, or signature.` + json.completion);
-        } else if (json.completion === 'KO - TIMED OUT') {
-            reject('Your Akinator session has timed out.' + json.completion);
-        } else {
-            reject('Unknown error has occured. Server response: ' + json.completion);
-        }
-    });
+    if(json == null || !json.completion) {
+        throw new Error(`A problem occurred with making the request.\nRequest Value: ${json}`);
+    }
+
+    if (json.completion === 'OK') {
+        return {
+            'nextQuestion': json.parameters.question,
+            'progress': json.parameters.progression,
+            'answers': json.parameters.answers.map( ans => ans.answer) || [],
+            'currentStep': step,
+            'nextStep': step+1
+        };
+    } else if (json.completion === 'KO - SERVER DOWN') {
+        throw new Error(`Akinator servers are down for the "${region}" region. Check back later. ` + json.completion);
+    } else if (json.completion === 'KO - TECHNICAL ERROR') {
+        throw new Error(`Akinator's servers have had a technical error for the "${region}" region. Check back later. ` + json.completion);
+    } else if (json.completion === 'KO - INCORRECT PARAMETER') {
+        throw new Error(`You inputted a wrong paramater, this could be session, region, or signature. ` + json.completion);
+    } else if (json.completion === 'KO - TIMED OUT') {
+        throw new Error('Your Akinator session has timed out. ' + json.completion);
+    } else {
+        throw new Error('Unknown error has occured. Server response: ' + json.completion);
+    }
 };
-
-
-/**
- * parses out the json info
- * @param json the json information from the request
- * @param step the step akinator is working on.
- */
-function jsonComplete(json, step) {
-
-    return {
-        'nextQuestion': json.parameters.question,
-        'progress': json.parameters.progression,
-        'answers': json.parameters.answers.map( ans => ans.answer) || [],
-        'currentStep': step,
-        'nextStep': step+1
-    };
-}

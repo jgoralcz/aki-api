@@ -9,17 +9,11 @@ module.exports = async (region) => {
     const id = url.regionURL(region); //gets id
 
     // request akinator.com/game so we get the uid_ext_session and frontaddr.
-    let uid, frontaddr;
-    try {
-        const uriObj = await getSession();
-        uid = uriObj.uid;
-        frontaddr = uriObj.frontaddr;
-    }
-    catch(error) {
-        console.error(error);
-        return;
-    }
+    const uriObj = await getSession();
+    const uid = uriObj.uid;
+    const frontaddr = uriObj.frontaddr;
 
+    // the options for the request
     const opts = {
         method: 'GET',
         json: true,
@@ -33,43 +27,30 @@ module.exports = async (region) => {
         gzip: true
     };
 
-    //get the json data, and await it
+    // get the json data, and await it
     const json = await request(opts).catch(console.error);
 
-    return new Promise( (resolve, reject) => {
-        if (json.completion === 'OK') {
-            try {
-                //resolve the function
-                resolve(jsonComplete(json));
-            } catch(e) {
-                console.error(e);
-                reject(json);
-            }
-        }
-        //else errors
-        else if (json.completion === 'KO - SERVER DOWN') {
-            reject(`Akinator servers are down for the "${region}" region. Check back later.\n${json.completion}`);
-        } else if (json.completion === 'KO - TECHNICAL ERROR') {
-            reject(`Akinator's servers have had a technical error for the "${region}" region. Check back later.\n${json.completion}`);
-        } else {
-            reject(`Unknown error has occured.\n${json.completion}`);
-        }
-    });
-};
+    if(json == null || !json.completion) {
+        throw new Error(`A problem occurred with making the request.\nRequest Value: ${json}`);
+    }
 
-/**
- * parses out the json info
- * @param json the json information from the request
- */
-const jsonComplete = (json) => {
-
-    return {
-        'session': json.parameters.identification.session,
-        'signature': json.parameters.identification.signature,
-        'question': json.parameters.step_information.question,
-        'challenge_auth': json.parameters.identification.challenge_auth,
-        'answers': json.parameters.answers.map( ans => ans.answer) || []
-    };
+    if (json.completion === 'OK') {
+        return {
+            'session': json.parameters.identification.session,
+            'signature': json.parameters.identification.signature,
+            'question': json.parameters.step_information.question,
+            'challenge_auth': json.parameters.identification.challenge_auth,
+            'answers': json.parameters.answers.map( ans => ans.answer) || []
+        };
+    }
+    // else errors
+    else if (json.completion === 'KO - SERVER DOWN') {
+        throw new Error(`Akinator servers are down for the "${region}" region. Check back later.\n${json.completion}`);
+    } else if (json.completion === 'KO - TECHNICAL ERROR') {
+        throw new Error(`Akinator's servers have had a technical error for the "${region}" region. Check back later.\n${json.completion}`);
+    } else {
+        throw new Error(`Unknown error has occured.\n${json.completion}`);
+    }
 };
 
 // pattern to match see below for what we're looking for.
