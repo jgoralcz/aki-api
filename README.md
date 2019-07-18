@@ -80,7 +80,7 @@ const nextInfo = await aki.step(region, session, signature, answerId, step); // 
 ```
 
 ### Win/Show the akinator's guess
-#### To determine a win use the `progress` attribute. I like to do something like `if(nextInfo.progress >= 85)`
+#### To determine a win use the `progress` attribute. I like to do something like `if(nextInfo.progress >= 70)`
 
 ```js
 const aki = require('aki-api');
