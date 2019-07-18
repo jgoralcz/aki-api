@@ -40,7 +40,7 @@ module.exports = async (region) => {
             'signature': json.parameters.identification.signature,
             'question': json.parameters.step_information.question,
             'challenge_auth': json.parameters.identification.challenge_auth,
-            'answers': json.parameters.answers.map( ans => ans.answer) || []
+            'answers': json.parameters.step_information.answers.map( ans => ans.answer) || []
         };
     }
     // else errors

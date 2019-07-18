@@ -178,13 +178,8 @@ module.exports = {
                     if (found) {
                         // we had the right answer
                         if (answerID === 0) {
-                            // give points
-                            await bot.addGameAndBankPoints(message.author.id, 200);
-                            if(!userInfo.achievement_aki) {
-                                await bot.updateAkiAchievement(message.author.id);
-                                await message.channel.send(`**${message.author.tag}** has earned the achievement: **How did he know?!** for a correct Akinator answer. ` +
-                                    `This is one step closer to the Infinity Gauntlet. Use \`${prefix}stones\` to see your progress.`);
-                            }
+
+                            // send message
                             myMessage = await bot.editMessage(myMessage, `Looks like I win again! This time after ${nextInfo.nextStep} steps. Thanks for playing!`, {embed: embed});
 
                             if(collector != null && collector.emit) {
@@ -195,8 +190,6 @@ module.exports = {
                         }
                         // wrong answer
                         else if (answerID === 1) {
-                            // give points for wrong answer.
-                            await bot.addGameAndBankPoints(message.author.id, 50);
                         }
                         found = false; // not found, time to reset on our side
 

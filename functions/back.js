@@ -35,7 +35,7 @@ module.exports = async (region, session, signature, answerId, step) => {
     if (json.completion === 'OK') {
         return {
             'nextQuestion': json.parameters.question,
-            "progress": json.parameters.progression,
+            'progress': json.parameters.progression,
             'answers': json.parameters.answers.map( ans => ans.answer) || [],
             'currentStep': step,
             'nextStep': step-1

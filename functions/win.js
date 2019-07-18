@@ -35,10 +35,10 @@ module.exports = async (region, session, signature, step) => {
     // only using promises now
     if (json.completion === 'OK') {
         return {
-            "answers": json.parameters.answers.map(ans => ans.answer) || [],
-            "currentStep": step,
-            "nextStep": step + 1,
-            "guessCount": json.parameters.NbObjetsPertinents // number of guesses akinator holds
+            'answers': json.parameters.answers.map(ans => ans.answer) || [],
+            'currentStep': step,
+            'nextStep': step + 1,
+            'guessCount': json.parameters.NbObjetsPertinents // number of guesses akinator holds
         };
     } else if (json.completion === 'KO - SERVER DOWN') {
         throw new Error(`Akinator servers are down for the "${region}" region. Check back later. ` + json.completion);
