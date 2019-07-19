@@ -35,7 +35,7 @@ module.exports = async (region, session, signature, step) => {
     // only using promises now
     if (json.completion === 'OK') {
         return {
-            'answers': json.parameters.answers.map(ans => ans.answer) || [],
+            'answers': json.parameters.elements.map(ele => ele.element) || [],
             'currentStep': step,
             'nextStep': step + 1,
             'guessCount': json.parameters.NbObjetsPertinents // number of guesses akinator holds
