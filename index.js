@@ -1,7 +1,7 @@
-const startFunc = require('./functions/start.js');
-const stepFunc = require('./functions/step.js');
-const backFunc = require('./functions/back.js');
-const winFunc = require('./functions/win.js');
+const startFunc = require('./src/functions/start.js');
+const stepFunc = require('./src/functions/step.js');
+const backFunc = require('./src/functions/back.js');
+const winFunc = require('./src/functions/win.js');
 
 /**
  * starts the akinator. Creats ax unique game session and returns data.

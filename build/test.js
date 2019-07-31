@@ -1,5 +1,3 @@
-"use strict"
-
 const aki = require('../index');
 
 // List of Regions
@@ -24,61 +22,38 @@ const aki = require('../index');
 */
 
 
-//start off the game, start does not have these properties due to the website.
-let answerId = 0;
-let step = 0;
+// start off the game, start does not have these properties due to the website.
+const answerId = 0;
+const regions = ['en', 'en2', 'en3', 'en_object', 'en_animals',
+  'ar', 'cn', 'de', 'de_animals', 'es', 'es_animals', 'fr', 'fr_objects', 'fr_animals',
+  'il', 'it', 'it_animals', 'jp', 'jp_animals', 'kr', 'nl', 'pl', 'pt', 'ru', 'tr'];
 
-const regions = ['en', 'en2', 'ar', 'cn', 'de', 'es', 'fr', 'il', 'it', 'jp', 'kr', 'nl', 'pl', 'pt', 'ru', 'tr'];
-
-
-// Example
-aki.start('en', (gd, error) => {
-  if (error) {
-    console.log(error);
-  } else {
-    aki.step('en', gd.session, gd.signature, answerId, step, (next, error) => {
-      if (error) {
-        console.error(error);
-      } else {
-        console.log(next);
-        step++;
-      }
-    });
-  }
-});
-
-//example 2
+// example
 const testGame = async (region) => {
-
   const startGame = await aki.start(region);
 
-  console.log("game started: " + JSON.stringify(startGame, null, 2));
+  console.log(`game started: ${JSON.stringify(startGame, null, 2)}`);
 
-  if(startGame != null) {
-    let answer = await aki.step(region, startGame.session, startGame.signature, answerId, step);
-    //then use startGame.nextStep;
+  if (startGame != null) {
+    const answer = await aki.step(region, startGame.session, startGame.signature, answerId, step);
+    console.log(`step: ${JSON.stringify(answer, null, 2)}`);
 
-    console.log("step: " + JSON.stringify(answer, null, 2));
-
-
-    //setup your own 
-    if(answer.progress >= 85) {
-      const guessWin = aki.win(region, startGame.session, startGame.signature, startGame, step+1);
-
-      console.log("I guess: " + guessWin.answers[0].name + "\n" + guessWin.answers[0].absolute_picture_path); //or other element names in the array
-    }
-
-    else {
-      //loop back through the step or use recursion
+    // setup your own
+    if (answer.progress >= 85) {
+      const guessWin = await aki.win(region, startGame.session, startGame.signature, startGame, step + 1);
+      const { answers } = guessWin;
+      console.log(`I guess: ${answers[0].name}\n${answers[0].absolute_picture_path}`); // or other element names in the array
+    } else {
+      // loop back through the step or use recursion
     }
   }
 };
 
 
-//run the test game
-for(let i = 0; i < regions.length; i++) {
-  testGame(regions[i]).then( () => {
+// run the test game
+for (let i = 0; i < regions.length; i += 1) {
+  testGame(regions[i]).then(() => {
     console.log('finished');
   })
-  .catch(console.error);
+    .catch(console.error);
 }

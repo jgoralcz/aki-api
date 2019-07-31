@@ -23,7 +23,7 @@ This package supports 15 different languages.
 ### Regions (en2, en3 are other English servers that Akinator supports; use if 'en' ever goes down)
 ```
  ['en', 'en2', 'en3', 'en_object', 'en_animals',
-  'ar', 'cn', 'de', 'de_animals' 'es', 'es_animals', 'fr', 'fr_objects', 'fr__animals',
+  'ar', 'cn', 'de', 'de_animals', 'es', 'es_animals', 'fr', 'fr_objects', 'fr_animals',
   'il', 'it', 'it_animals', 'jp', 'jp_animals', 'kr', 'nl', 'pl', 'pt', 'ru', and 'tr']
 ```
 
