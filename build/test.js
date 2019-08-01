@@ -51,4 +51,7 @@ for (let i = 0; i < regions.length; i += 1) {
   }
   const answer = await aki.win(region, startGame.session, startGame.signature, currentStep.nextStep).catch(console.error);
   console.log(answer);
+  process.exit(1);
 })();
+
+

@@ -5,11 +5,9 @@ const winFunc = require('./src/functions/win.js');
 
 /**
  * starts the akinator. Creats ax unique game session and returns data.
- * @param regionm the region that akinator supports. English is default.
+ * @param region the region that akinator supports. English is default.
  */
-exports.start = (region) => {
-    return startFunc(region);
-};
+const start = region => startFunc(region);
 
 
 /**
@@ -20,9 +18,7 @@ exports.start = (region) => {
  * @param answerId the answer the user clicks. Usually yes, no, don't know, probably, or probably not.
  * @param step the step the akinator is on in the game session.
  */
-exports.step = (region, session, signature, answerId, step) => {
-    return stepFunc(region, session, signature, answerId, step);
-};
+const step = (region, session, signature, answerId, step) => stepFunc(region, session, signature, answerId, step);
 
 /**
  * same as answer, but goes back.
@@ -32,9 +28,7 @@ exports.step = (region, session, signature, answerId, step) => {
  * @param answerId the answer the user clicks. Usually yes, no, don't know, probably, or probably not.
  * @param step the step the akinator is on in the game session.
  */
-exports.back = (region, session, signature, answerId, step) => {
-    return backFunc(region, session, signature, answerId, step);
-};
+const back = (region, session, signature, answerId, step) => backFunc(region, session, signature, answerId, step);
 
 
 /**
@@ -44,7 +38,11 @@ exports.back = (region, session, signature, answerId, step) => {
  * @param signature the akinator signature. Has a unique id.
  * @param step the step the akinator is on in the game session.
  */
-exports.win = (region, session, signature, step) => {
-    return winFunc(region, session, signature, step);
-};
+const win = (region, session, signature, step) => winFunc(region, session, signature, step);
 
+module.exports = {
+  start,
+  step,
+  back,
+  win,
+};
