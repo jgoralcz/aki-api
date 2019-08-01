@@ -15,7 +15,7 @@ module.exports = async (region, session, signature, step) => {
   const { body, statusCode } = result;
   if (statusCode === 200) {
     return {
-      answers: body.parameters.elements.map(ele => ele.element) || [],
+      answers: (body.parameters.elements || []).map(ele => ele.element),
       currentStep: step,
       nextStep: step + 1,
       guessCount: body.parameters.NbObjetsPertinents, // number of guesses akinator holds

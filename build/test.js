@@ -1,29 +1,5 @@
 const aki = require('../index');
-
-// List of Regions
-/*
-   en - English
-   en2 - English 2nd server
-   de - German
-   fr - French
-   in - Hindi
-   es - Spanish
-   cn - Chinese
-   ar - Arabic
-   il - Hebrew
-   it - Italian
-   jp - Japanese
-   kr - Korean
-   nl- Netherlands
-   pl - Polish
-   pt - Portuguese
-   ru - Russian
-   tr - Turkish
-*/
-
-
 // start off the game, start does not have these properties due to the website.
-const answerId = 0;
 const regions = ['en', 'en2', 'en3', 'en_object', 'en_animals',
   'ar', 'cn', 'de', 'de_animals', 'es', 'es_animals', 'fr', 'fr_objects', 'fr_animals',
   'il', 'it', 'it_animals', 'jp', 'jp_animals', 'kr', 'nl', 'pl', 'pt', 'ru', 'tr'];
@@ -31,13 +7,14 @@ const regions = ['en', 'en2', 'en3', 'en_object', 'en_animals',
 // example
 const testGame = async (region) => {
   const startGame = await aki.start(region);
+  const step = 0;
 
   console.log(`game started: ${JSON.stringify(startGame, null, 2)}`);
 
   if (startGame != null) {
+    const answerId = 0;
     const answer = await aki.step(region, startGame.session, startGame.signature, answerId, step);
     console.log(`step: ${JSON.stringify(answer, null, 2)}`);
-
     // setup your own
     if (answer.progress >= 85) {
       const guessWin = await aki.win(region, startGame.session, startGame.signature, startGame, step + 1);
@@ -57,3 +34,21 @@ for (let i = 0; i < regions.length; i += 1) {
   })
     .catch(console.error);
 }
+
+// full game test
+(async () => {
+  const region = 'en';
+  const startGame = await aki.start(region);
+  let answerId = 0;
+  let currentStep = await aki.step(region, startGame.session, startGame.signature, answerId, 0);
+
+
+  // WARNING DO NOT ACTUALLY DO THIS IN YOUR CODE
+  // THIS WILL BLOCK THE THREAD. BAD BAD BAD!!!
+  while (currentStep.progress <= 85) {
+    answerId = Math.floor(Math.random() * 2);
+    currentStep = await aki.step(region, startGame.session, startGame.signature, answerId, currentStep.nextStep);
+  }
+  const answer = await aki.win(region, startGame.session, startGame.signature, currentStep.nextStep).catch(console.error);
+  console.log(answer);
+})();
