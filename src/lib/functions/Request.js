@@ -18,9 +18,10 @@ const rp = async (uri) => {
     },
     gzip: true,
     resolveWithFullResponse: true,
+    timeout: 60000,
   };
 
-  const result = await request(opts).catch(() => null);
+  const result = await request(opts).catch(console.error);
   if (result == null) {
     throw new Error(`A problem occurred with making the request.\nRequest Value: ${(result && result.body) ? result.body : result}`);
   }

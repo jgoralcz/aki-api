@@ -77,7 +77,7 @@ const regionURL = (region) => {
     // animals
     case 'fr_animals':
     case 'french_animals':
-      return 'srv3.akinator.com:9259/';
+      return 'srv3.akinator.com:9259';
 
     case 'il':
     case 'hebrew':
@@ -113,7 +113,7 @@ const regionURL = (region) => {
 
     case 'pl':
     case 'polish':
-      return 'srv7.akinator.com:9240';
+      return 'srv14.akinator.com:9282';
 
     case 'pt':
     case 'portuguese':
