@@ -14,11 +14,11 @@ module.exports = async (region, session, signature, answerId, step) => {
   const id = getURL(region);
   const result = await request(`https://${id}/ws/answer?session=${session}&signature=${signature}&step=${step}&answer=${answerId}`);
   const { body, statusCode } = result;
-  if (statusCode === 200) {
+  if (statusCode === 200 && body && body.completion === 'OK') {
     return {
       nextQuestion: body.parameters.question,
       progress: body.parameters.progression,
-      answers: body.parameters.answers.map(ans => ans.answer) || [],
+      answers: body.parameters.answers.map(ans => ans.answer),
       currentStep: step,
       nextStep: step + 1,
     };

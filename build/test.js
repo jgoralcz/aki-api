@@ -26,10 +26,10 @@ const testGame = async (region) => {
   // WARNING DO NOT ACTUALLY DO THIS IN YOUR CODE
   // THIS WILL BLOCK THE THREAD. BAD BAD BAD!!!
   for (let i = 0; i < regions.length; i += 1) {
+    const r = regions[i];
     try {
-      const r = regions[i];
       await testGame(r);
-      console.log('test passed', i + 1);
+      console.log('test passed', r, i + 1);
     } catch(error) {
       console.error(error);
       console.error('TEST FAILED', r, i + 1);

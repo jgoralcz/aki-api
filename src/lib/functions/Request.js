@@ -21,7 +21,7 @@ const rp = async (uri) => {
     timeout: 60000,
   };
 
-  const result = await request(opts).catch(console.error);
+  const result = await request(opts).catch(() => null);
   if (result == null) {
     throw new Error(`A problem occurred with making the request.\nRequest Value: ${(result && result.body) ? result.body : result}`);
   }

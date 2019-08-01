@@ -13,7 +13,7 @@ module.exports = async (region, session, signature, step) => {
   const id = getURL(region);
   const result = await request(`https://${id}/ws/list?session=${session}&signature=${signature}&step=${step}`);
   const { body, statusCode } = result;
-  if (statusCode === 200) {
+  if (statusCode === 200 && body && body.completion === 'OK') {
     return {
       answers: (body.parameters.elements || []).map(ele => ele.element),
       currentStep: step,

@@ -13,14 +13,14 @@ const akinatorAPIErrors = require('../errors/AkinatorAPIErrors');
 module.exports = async (region, session, signature, answerId, step) => {
   const id = getURL(region);
 
-  // ex uri: https://srv6.akinator.com:9126/ws/answer?callback=&session=323&signature=343571160&step=0&answer=0
+  // ex uri: https://srv6.akinator.com:9126/ws/cancel_answer?callback=&session=323&signature=343571160&step=0&answer=0
   const result = await request(`https://${id}/ws/cancel_answer?callback=&session=${session}&signature=${signature}&step=${step}&answer=-1`);
   const { body, statusCode } = result;
-  if (statusCode === 200) {
+  if (statusCode === 200 && body && body.completion === 'OK') {
     return {
       nextQuestion: body.parameters.question,
       progress: body.parameters.progression,
-      answers: body.parameters.answers.map(ans => ans.answer) || [],
+      answers: body.parameters.answers.map(ans => ans.answer),
       currentStep: step,
       nextStep: step - 1,
     };

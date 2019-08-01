@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 const startFunc = require('./src/functions/start.js');
 const stepFunc = require('./src/functions/step.js');
 const backFunc = require('./src/functions/back.js');
@@ -16,9 +17,9 @@ const start = region => startFunc(region);
  * @param session the akinator game session. Has a unique id.
  * @param signature the akinator signature. Has a unique id.
  * @param answerId the answer the user clicks. Usually yes, no, don't know, probably, or probably not.
- * @param step the step the akinator is on in the game session.
+ * @param stepNum the step the akinator is on in the game session.
  */
-const step = (region, session, signature, answerId, step) => stepFunc(region, session, signature, answerId, step);
+const step = (region, session, signature, answerId, stepNum) => stepFunc(region, session, signature, answerId, stepNum);
 
 /**
  * same as answer, but goes back.
@@ -26,9 +27,9 @@ const step = (region, session, signature, answerId, step) => stepFunc(region, se
  * @param session the akinator game session. Has a unique id.
  * @param signature the akinator signature. Has a unique id.
  * @param answerId the answer the user clicks. Usually yes, no, don't know, probably, or probably not.
- * @param step the step the akinator is on in the game session.
+ * @param stepNum the step the akinator is on in the game session.
  */
-const back = (region, session, signature, answerId, step) => backFunc(region, session, signature, answerId, step);
+const back = (region, session, signature, answerId, stepNum) => backFunc(region, session, signature, answerId, stepNum);
 
 
 /**
@@ -36,9 +37,9 @@ const back = (region, session, signature, answerId, step) => backFunc(region, se
  * @param region the region that akinator supports. English is default.
  * @param session the akinator game session. Has a unique id.
  * @param signature the akinator signature. Has a unique id.
- * @param step the step the akinator is on in the game session.
+ * @param stepNum the step the akinator is on in the game session.
  */
-const win = (region, session, signature, step) => winFunc(region, session, signature, step);
+const win = (region, session, signature, stepNum) => winFunc(region, session, signature, stepNum);
 
 module.exports = {
   start,
