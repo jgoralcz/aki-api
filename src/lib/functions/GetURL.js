@@ -14,7 +14,7 @@ const regionURL = (region) => {
     // characters
     case 'en':
     case 'english':
-      return 'srv13.akinator.com:9196';
+      return 'srv2.akinator.com:9162';
 
     // characters
     case 'en2':

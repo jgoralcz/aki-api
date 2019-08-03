@@ -1,4 +1,5 @@
 const getURL = require('../lib/functions/GetURL');
+const { jQuery } = require('../lib/constants/Client');
 const akinatorAPIErrors = require('../errors/AkinatorAPIErrors');
 const request = require('../lib/functions/Request');
 const getSession = require('../lib/functions/GetSession');
@@ -13,7 +14,7 @@ module.exports = async (region) => {
   // request akinator.com/game so we get the uid_ext_session and frontaddr.
   const uriObj = await getSession();
   const { uid, frontaddr } = uriObj;
-  const result = await request(`https://${id}/ws/new_session?partner=1&player=website-desktop&uid_ext_session=${uid}&frontaddr=${frontaddr}&constraint=ETAT%%3C%%3E%%27AV%%27&constraint=ETAT<>'AV'`);
+  const result = await request(`https://${id}/ws/new_session?callback=${jQuery}${new Date().getTime()}&partner=1&player=website-desktop&uid_ext_session=${uid}&frontaddr=${frontaddr}&constraint=ETAT%%3C%%3E%%27AV%%27&constraint=ETAT<>'AV'`);
   const { body, statusCode } = result;
   if (statusCode === 200 && body && body.completion === 'OK') {
     return {

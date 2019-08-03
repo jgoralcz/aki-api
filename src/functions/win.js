@@ -1,4 +1,5 @@
 const request = require('../lib/functions/Request');
+const { jQuery } = require('../lib/constants/Client');
 const getURL = require('../lib/functions/GetURL');
 const akinatorAPIErrors = require('../errors/AkinatorAPIErrors');
 
@@ -11,7 +12,7 @@ const akinatorAPIErrors = require('../errors/AkinatorAPIErrors');
  */
 module.exports = async (region, session, signature, step) => {
   const id = getURL(region);
-  const result = await request(`https://${id}/ws/list?session=${session}&signature=${signature}&step=${step}`);
+  const result = await request(`https://${id}/ws/list?callback=${jQuery}${new Date().getTime()}&signature=${signature}&step=${step}&session=${session}`);
   const { body, statusCode } = result;
   if (statusCode === 200 && body && body.completion === 'OK') {
     return {

@@ -1,6 +1,7 @@
 const request = require('../lib/functions/Request');
 const getURL = require('../lib/functions/GetURL');
 const akinatorAPIErrors = require('../errors/AkinatorAPIErrors');
+const { jQuery } = require('../lib/constants/Client');
 
 /**
  * gets a step for aki by requesting the correct data.
@@ -12,7 +13,7 @@ const akinatorAPIErrors = require('../errors/AkinatorAPIErrors');
  */
 module.exports = async (region, session, signature, answerId, step) => {
   const id = getURL(region);
-  const result = await request(`https://${id}/ws/answer?session=${session}&signature=${signature}&step=${step}&answer=${answerId}`);
+  const result = await request(`https://${id}/ws/answer?callback=${jQuery}${new Date().getTime()}&session=${session}&signature=${signature}&step=${step}&answer=${answerId}`);
   const { body, statusCode } = result;
   if (statusCode === 200 && body && body.completion === 'OK') {
     return {

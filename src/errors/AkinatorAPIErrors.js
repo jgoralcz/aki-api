@@ -1,3 +1,5 @@
+const { issues } = require('../lib/constants/Client');
+
 /**
  * shows the akinator api errors
  * @param body the akinator errors
@@ -15,6 +17,8 @@ const AkinatorAPIErrors = (body, region) => {
       throw new Error(`Your Akinator session has timed out. ${body.completion}`);
     } else if (body.completion === 'WARN - NO QUESTION') {
       throw new Error(`No question found. ${body.completion}`);
+    } else if (body.completion === 'KO - MISSING PARAMETERS') {
+      throw new Error(`Akinator needs more parameters. Please make an issue at: ${issues}`);
     } else {
       throw new Error(`Unknown error has occurred. Server response: ${body.completion}`);
     }

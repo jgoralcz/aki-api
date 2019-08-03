@@ -1,5 +1,5 @@
-const { patternSession, issues } = require('../constants/Client');
 const request = require('request-promise');
+const { patternSession, issues } = require('../constants/Client');
 
 /**
  * gets the session uid and frontaddr needed to play the game.

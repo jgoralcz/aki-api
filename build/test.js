@@ -19,20 +19,19 @@ const testGame = async (region) => {
 // full game test
 (async () => {
   const region = 'en';
-  const startGame = await aki.start(region);
+  const startGame = await aki.start(region).catch(console.error);
   let answerId = 0;
   let currentStep = await aki.step(region, startGame.session, startGame.signature, answerId, 0);
-
   // WARNING DO NOT ACTUALLY DO THIS IN YOUR CODE
   // THIS WILL BLOCK THE THREAD. BAD BAD BAD!!!
   for (let i = 0; i < regions.length; i += 1) {
     const r = regions[i];
     try {
       await testGame(r);
-      console.log('test passed', r, i + 1);
+      console.log(i + 1, 'test passed', r);
     } catch(error) {
       console.error(error);
-      console.error('TEST FAILED', r, i + 1);
+      console.error(i + 1, 'TEST FAILED', r);
     }
   }
 

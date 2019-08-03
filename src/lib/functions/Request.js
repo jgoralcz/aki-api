@@ -8,7 +8,6 @@ const request = require('request-promise');
 const rp = async (uri) => {
   const opts = {
     method: 'GET',
-    json: true,
     uri,
     headers: {
       Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
@@ -18,14 +17,20 @@ const rp = async (uri) => {
     },
     gzip: true,
     resolveWithFullResponse: true,
-    timeout: 60000,
+    timeout: 10000,
   };
 
   const result = await request(opts).catch(() => null);
   if (result == null) {
     throw new Error(`A problem occurred with making the request.\nRequest Value: ${(result && result.body) ? result.body : result}`);
   }
+
+  // parse out the json
+  const beginningParse = result.body.indexOf('(');
+  const jsonString = result.body.substring(beginningParse + 1, result.body.length - 1);
+  result.body = JSON.parse(jsonString);
   return result;
+
 };
 
 module.exports = rp;
