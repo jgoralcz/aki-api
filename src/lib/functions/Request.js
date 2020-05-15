@@ -21,9 +21,11 @@ const rp = async (uri) => {
     timeout: 10000,
   };
 
-  const result = await request(opts).catch(error => error);
-  if (result == null) {
-    throw new Error(`A problem occurred with making the request.\nRequest Value: ${(result && result.body) ? result.body : result}`);
+  let result;
+  try {
+    result = await request(opts);
+  } catch (error) {
+    throw new Error(`A problem occurred with making the request: ${error}`);
   }
 
   const beginningParse = result.body.indexOf('(');
