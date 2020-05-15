@@ -45,7 +45,7 @@ module.exports = {
 
     // check permissions
     const reactPermissions = message.guild.me.hasPermission(['ADD_REACTIONS', 'EMBED_LINKS', 'READ_MESSAGE_HISTORY'])
-        && message.channel.permissionsFor(message.guild.me).has(['ADD_REACTIONS', 'EMBED_LINKS', 'READ_MESSAGE_HISTORY']);
+      && message.channel.permissionsFor(message.guild.me).has(['ADD_REACTIONS', 'EMBED_LINKS', 'READ_MESSAGE_HISTORY']);
 
     if (!reactPermissions) {
       return await message.channel.send('`❌` | I need reaction permissions, embed permissions, and read message history permissions.');
@@ -64,27 +64,17 @@ module.exports = {
 
 
     // should probably fix this nesting
-    let info = await aki.start(region).catch(console.error);
+    const info = await aki.start(region).catch(console.error);
     if (!info) {
-      region = 'en2';
-      info = await aki.start(region).catch(console.error);
-      if (!info) {
-        region = 'en3';
-        info = await aki.start(region).catch(console.error);
-
-        // if still no info, then we have no info.
-        if (!info) {
-          return await message.channel.send('Aki servers are down :(\nPlease check back later.');
-        }
-      }
+      return message.channel.send('Aki servers are down :(\nPlease check back later.');
     }
 
     // variables to further help
     let loop = 0; let
       found = false;
     const str = `${this.yes}: **Yes** **|** ${this.no}: **No** **|** ${this.unknown} **I don't know**\n\n`
-            + `${this.probably}: **Probably** **|** ${this.probablyNot}: **Probably Not**\n\n`
-            + `${this.back}: **Back** **|** ${this.stop}: **Stop**`;
+      + `${this.probably}: **Probably** **|** ${this.probablyNot}: **Probably Not**\n\n`
+      + `${this.back}: **Back** **|** ${this.stop}: **Stop**`;
 
     let nextInfo = {};
     nextInfo.nextQuestion = str;
@@ -109,7 +99,7 @@ module.exports = {
     // create my filter
     const author = message.author.id;
     const filter = (reaction, user) => ([this.yes, this.no, this.unknown, this.probably, this.probablyNot, this.back, this.stop].includes(reaction.emoji.name))
-            && user.id === author && !user.bot;
+      && user.id === author && !user.bot;
 
     // new reaction collector
     const collector = myMessage.createReactionCollector(filter);

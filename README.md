@@ -5,6 +5,8 @@
 
 An API for Akinator based in NodeJS.
 
+**IMPORTANT:** if you are not on version 4, you need to upgrade and add the new `frontAddr` property from `start` and pass it into `step`
+
 This package contains all the features that you will need to interact with the Akinator API.
 Below you will find information on how to install the package and utilize the package's features.
 This package supports 15 different languages.
@@ -20,9 +22,9 @@ This package supports 15 different languages.
 
 ``npm i aki-api``
 
-### Regions (en2, en3 are other English servers that Akinator supports; use if 'en' ever goes down)
+### Regions
 ```
- ['en', 'en2', 'en3', 'en_object', 'en_animals',
+ ['en', 'en_object', 'en_animals',
   'ar', 'cn', 'de', 'de_animals', 'es', 'es_animals', 'fr', 'fr_objects', 'fr_animals',
   'il', 'it', 'it_animals', 'jp', 'jp_animals', 'kr', 'nl', 'pl', 'pt', 'ru', and 'tr']
 ```
@@ -58,7 +60,7 @@ const data = await aki.start(region); // must be in async function
 ```js
 const aki = require('aki-api');
 
-const nextInfo = await aki.step(region, session, signature, answerId, step); // must be in async function
+const nextInfo = await aki.step(region, session, signature, answerId, step, frontAddr); // must be in async function
 ```
 
 #### Sample JSON Response
