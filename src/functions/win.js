@@ -16,7 +16,7 @@ module.exports = async (region, session, signature, step) => {
   const result = await request(`https://${urlApiWs}/ws/list?callback=${jQuery + new Date().getTime()}&signature=${signature}&step=${step}&session=${session}`);
   const { body, statusCode } = result;
 
-  if (!statusCode || statusCode !== 200 || !body || body.completion !== 'OK' || !body.parameters || !body.parameters.question) return akinatorAPIErrors(body, region);
+  if (!statusCode || statusCode !== 200 || !body || body.completion !== 'OK' || !body.parameters || !body.parameters.elements) return akinatorAPIErrors(body, region);
 
   return {
     answers: (body.parameters.elements || []).map(ele => ele.element),
