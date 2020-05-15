@@ -13,24 +13,25 @@ const rp = async (uri) => {
       Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
       'Accept-Encoding': 'gzip, deflate',
       'Accept-Language': 'en-US,en;q=0.9',
-      'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5376e Safari/8536.25',
+      'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) snap Chromium/81.0.4044.92 Chrome/81.0.4044.92 Safari/537.36',
+      'x-requested-with': 'XMLHttpRequest',
     },
     gzip: true,
     resolveWithFullResponse: true,
     timeout: 10000,
   };
 
-  const result = await request(opts).catch(() => null);
-  if (result == null) {
-    throw new Error(`A problem occurred with making the request.\nRequest Value: ${(result && result.body) ? result.body : result}`);
+  let result;
+  try {
+    result = await request(opts);
+  } catch (error) {
+    throw new Error(`A problem occurred with making the request: ${error}`);
   }
 
-  // parse out the json
   const beginningParse = result.body.indexOf('(');
   const jsonString = result.body.substring(beginningParse + 1, result.body.length - 1);
   result.body = JSON.parse(jsonString);
   return result;
-
 };
 
 module.exports = rp;

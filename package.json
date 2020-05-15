@@ -1,12 +1,6 @@
 {
-  "_args": [
-    [
-      "aki-api@2.1.1",
-      "/Users/Josh/Documents/GitHub/Discord-Bot-Jojo"
-    ]
-  ],
-  "_from": "aki-api@2.1.1",
-  "_id": "aki-api@2.1.1",
+  "_from": "aki-api@4.0.0",
+  "_id": "aki-api@4.0.0",
   "_inBundle": false,
   "_integrity": "sha512-nNt1bOgOI7LunlT12zweWh/Mi2oAHfXKH556+rKbqlFzVgwFDYApYI60R4vJ7uViuEBrjlCc3IC6PUAtTgXmZA==",
   "_location": "/aki-api",
@@ -32,19 +26,18 @@
   "_requested": {
     "type": "version",
     "registry": true,
-    "raw": "aki-api@2.1.1",
+    "raw": "aki-api@4.0.0",
     "name": "aki-api",
     "escapedName": "aki-api",
-    "rawSpec": "2.1.1",
+    "rawSpec": "4.0.0",
     "saveSpec": null,
-    "fetchSpec": "2.1.1"
+    "fetchSpec": "4.0.0"
   },
   "_requiredBy": [
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/aki-api/-/aki-api-2.1.1.tgz",
-  "_spec": "2.1.1",
-  "_where": "/Users/Josh/Documents/GitHub/Discord-Bot-Jojo",
+  "_resolved": "https://registry.npmjs.org/aki-api/-/aki-api-4.0.0.tgz",
+  "_spec": "4.0.0",
   "author": {
     "name": "Joshua Goralczyk"
   },
@@ -52,8 +45,8 @@
     "url": "https://github.com/jgoralcz/aki-api/issues"
   },
   "dependencies": {
-    "request": "^2.88.0",
-    "request-promise": "^4.2.4"
+    "request": "^2.88.2",
+    "request-promise": "^4.2.5"
   },
   "description": "An API for Akinator.  Supports up to 15 languages and has two English servers.",
   "homepage": "https://github.com/jgoralcz/aki-api#readme",
@@ -75,10 +68,10 @@
     "start": "node index.js",
     "test": "node build/test.js"
   },
-  "version": "3.2.0",
+  "version": "4.0.0",
   "devDependencies": {
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.2.0",
-    "eslint-plugin-import": "^2.18.2"
+    "eslint-plugin-import": "^2.20.2"
   }
 }
