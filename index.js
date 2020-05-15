@@ -5,7 +5,7 @@ const backFunc = require('./src/functions/back.js');
 const winFunc = require('./src/functions/win.js');
 
 /**
- * starts the akinator. Creats ax unique game session and returns data.
+ * starts the akinator. Creats a unique game session and returns data.
  * @param region the region that akinator supports. English is default.
  */
 const start = region => startFunc(region);
@@ -18,8 +18,9 @@ const start = region => startFunc(region);
  * @param signature the akinator signature. Has a unique id.
  * @param answerId the answer the user clicks. Usually yes, no, don't know, probably, or probably not.
  * @param stepNum the step the akinator is on in the game session.
+ * @param frontAddr the addr that akinator uses for authorization.
  */
-const step = (region, session, signature, answerId, stepNum) => stepFunc(region, session, signature, answerId, stepNum);
+const step = (region, session, signature, answerId, stepNum, frontAddr) => stepFunc(region, session, signature, answerId, stepNum, frontAddr);
 
 /**
  * same as answer, but goes back.

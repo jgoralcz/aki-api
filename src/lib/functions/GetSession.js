@@ -6,7 +6,6 @@ const { patternSession, issues } = require('../constants/Client');
  * @returns {Promise<{uid: string, frontaddr: string}>}
  */
 const getSession = async () => {
-  // request the new url
   const html = await request({ uri: 'https://en.akinator.com/game' }).catch(() => null);
 
   // use pattern matching to get the uid and frontaddr. It looks like:

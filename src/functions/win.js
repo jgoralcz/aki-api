@@ -11,16 +11,17 @@ const akinatorAPIErrors = require('../errors/AkinatorAPIErrors');
  * @param step the number of step this is on.
  */
 module.exports = async (region, session, signature, step) => {
-  const id = getURL(region);
-  const result = await request(`https://${id}/ws/list?callback=${jQuery}${new Date().getTime()}&signature=${signature}&step=${step}&session=${session}`);
+  const { urlApiWs } = getURL(region);
+
+  const result = await request(`https://${urlApiWs}/ws/list?callback=${jQuery + new Date().getTime()}&signature=${signature}&step=${step}&session=${session}`);
   const { body, statusCode } = result;
-  if (statusCode === 200 && body && body.completion === 'OK') {
-    return {
-      answers: (body.parameters.elements || []).map(ele => ele.element),
-      currentStep: step,
-      nextStep: step + 1,
-      guessCount: body.parameters.NbObjetsPertinents, // number of guesses akinator holds
-    };
-  }
-  return akinatorAPIErrors(body, region);
+
+  if (!statusCode || statusCode !== 200 || !body || body.completion !== 'OK' || !body.parameters || !body.parameters.elements) return akinatorAPIErrors(body, region);
+
+  return {
+    answers: (body.parameters.elements || []).map(ele => ele.element),
+    currentStep: step,
+    nextStep: step + 1,
+    guessCount: body.parameters.NbObjetsPertinents, // number of guesses akinator holds
+  };
 };
