@@ -74,7 +74,7 @@ module.exports = class Akinator {
     this.currentStep = this.nextStep;
     this.nextStep = this.currentStep - 1;
 
-    const result = await request(`https://${this.urlApiWs}/ws/cancel_answer?&callback=${jQuery + new Date().getTime()}&session=${this.session}&signature=${this.signature}&step=${this.nextStep}&answer=-1`);
+    const result = await request(`https://${this.urlApiWs}/ws/cancel_answer?&callback=${jQuery + new Date().getTime()}&session=${this.session}&signature=${this.signature}&step=${this.currentStep}&answer=-1`);
     const { body, statusCode } = result;
 
     if (!statusCode || statusCode !== 200 || !body || body.completion !== 'OK' || !body.parameters || !body.parameters.question) {

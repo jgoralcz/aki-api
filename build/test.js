@@ -8,18 +8,24 @@ const regions = ['en', 'en_object', 'en_animals',
 const testGame = async (region) => {
   console.log(`REGION: ${region} STARTING`);
 
-
   const aki = new Aki(region);
+
   await aki.start();
+  console.log('start:', aki.question, aki.progress);
+
   await aki.step(0);
+  console.log('step:', aki.currentStep, aki.question, aki.progress);
 
   await aki.back();
-  while (aki.progress <= 50 && aki.currentStep < 20) {
-    console.log(aki.question, aki.progress);
+  console.log('step:', aki.currentStep, aki.question, aki.progress);
+
+  while (aki.progress <= 50 && aki.currentStep < 15) {
     await aki.step(Math.floor(Math.random() * 2));
+    console.log('step:', aki.currentStep, aki.question, aki.progress);
   }
 
   await aki.win();
+  console.log('win:', aki.question, aki.answers);
 };
 
 (async () => {
