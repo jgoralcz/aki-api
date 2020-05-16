@@ -1,6 +1,6 @@
 {
-  "_from": "aki-api@4.0.0",
-  "_id": "aki-api@4.0.0",
+  "_from": "aki-api@5.0.0",
+  "_id": "aki-api@5.0.0",
   "_inBundle": false,
   "_integrity": "sha512-nNt1bOgOI7LunlT12zweWh/Mi2oAHfXKH556+rKbqlFzVgwFDYApYI60R4vJ7uViuEBrjlCc3IC6PUAtTgXmZA==",
   "_location": "/aki-api",
@@ -26,18 +26,18 @@
   "_requested": {
     "type": "version",
     "registry": true,
-    "raw": "aki-api@4.0.0",
+    "raw": "aki-api@5.0.0",
     "name": "aki-api",
     "escapedName": "aki-api",
-    "rawSpec": "4.0.0",
+    "rawSpec": "5.0.0",
     "saveSpec": null,
-    "fetchSpec": "4.0.0"
+    "fetchSpec": "5.0.0"
   },
   "_requiredBy": [
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/aki-api/-/aki-api-4.0.0.tgz",
-  "_spec": "4.0.0",
+  "_resolved": "https://registry.npmjs.org/aki-api/-/aki-api-5.0.0.tgz",
+  "_spec": "5.0.0",
   "author": {
     "name": "Joshua Goralczyk"
   },
@@ -68,7 +68,7 @@
     "start": "node index.js",
     "test": "node build/test.js"
   },
-  "version": "4.0.0",
+  "version": "5.0.0",
   "devDependencies": {
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.2.0",

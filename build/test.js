@@ -1,34 +1,27 @@
 /* eslint-disable no-console */
-const aki = require('../index');
+const Aki = require('../index');
 
 const regions = ['en', 'en_object', 'en_animals',
   'ar', 'cn', 'de', 'de_animals', 'es', 'es_animals', 'fr', 'fr_objects', 'fr_animals',
   'il', 'it', 'it_animals', 'jp', 'jp_animals', 'kr', 'nl', 'pl', 'pt', 'ru', 'tr'];
 
 const testGame = async (region) => {
-  const startGame = await aki.start(region);
-  let answerId = 0;
+  console.log(`REGION: ${region} STARTING`);
 
-  if (startGame == null) {
-    console.error('Could not start a session.');
+
+  const aki = new Aki(region);
+  await aki.start();
+  await aki.step(0);
+
+  await aki.back();
+  while (aki.progress <= 50 && aki.currentStep < 20) {
+    console.log(aki.question, aki.progress);
+    await aki.step(Math.floor(Math.random() * 2));
   }
 
-  if (startGame != null) {
-    let currentStep = await aki.step(region, startGame.session, startGame.signature, answerId, 0, startGame.frontAddr);
-
-    currentStep = await aki.back(region, startGame.session, startGame.signature, answerId, currentStep.nextStep, startGame.frontAddr);
-
-    while (currentStep.progress <= 50) {
-      answerId = Math.floor(Math.random() * 2);
-      currentStep = await aki.step(region, startGame.session, startGame.signature, answerId, currentStep.nextStep, startGame.frontAddr);
-    }
-    await aki.win(region, startGame.session, startGame.signature, currentStep.nextStep).catch(console.error);
-    console.log('finished');
-  }
+  await aki.win();
 };
 
-
-// full game test
 (async () => {
   for (let i = 0; i < regions.length; i += 1) {
     const r = regions[i];
