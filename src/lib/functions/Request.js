@@ -21,17 +21,15 @@ const rp = async (uri) => {
     timeout: 10000,
   };
 
-  let result;
   try {
-    result = await request(opts);
+    const result = await request(opts);
+    const beginningParse = result.body.indexOf('(');
+    const jsonString = result.body.substring(beginningParse + 1, result.body.length - 1);
+    result.body = JSON.parse(jsonString);
+    return result;
   } catch (error) {
     throw new Error(`A problem occurred with making the request: ${error}`);
   }
-
-  const beginningParse = result.body.indexOf('(');
-  const jsonString = result.body.substring(beginningParse + 1, result.body.length - 1);
-  result.body = JSON.parse(jsonString);
-  return result;
 };
 
 module.exports = rp;
