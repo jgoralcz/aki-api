@@ -5,7 +5,7 @@
 
 An API for Akinator based in NodeJS.
 
-**IMPORTANT:** if you are not on version 4, you need to upgrade and add the new `frontAddr` property from `start` and pass it into `step`
+**IMPORTANT:** Version 4 is a functional approach while Version 5 is an object-oriented approach. Please be aware of the differences!
 
 This package contains all the features that you will need to interact with the Akinator API.
 Below you will find information on how to install the package and utilize the package's features.
@@ -23,139 +23,158 @@ This package supports 15 different languages.
 ``npm i aki-api``
 
 ### Regions
-```
- ['en', 'en_object', 'en_animals',
-  'ar', 'cn', 'de', 'de_animals', 'es', 'es_animals', 'fr', 'fr_objects', 'fr_animals',
-  'il', 'it', 'it_animals', 'jp', 'jp_animals', 'kr', 'nl', 'pl', 'pt', 'ru', and 'tr']
+```js
+ [
+  'en',
+  'en_object',
+  'en_animals',
+  'ar',
+  'cn',
+  'de',
+  'de_animals',
+  'es',
+  'es_animals',
+  'fr',
+  'fr_objects',
+  'fr_animals',
+  'il',
+  'it',
+  'it_animals',
+  'jp',
+  'jp_animals',
+  'kr',
+  'nl',
+  'pl',
+  'pt',
+  'ru',
+  'tr'
+]
 ```
 
 
 ## Usage
 
 ```js
-const aki = require('aki-api');
+const Aki = require('aki-api');
 
-const data = await aki.start(region); // must be in async function
+const region = 'en';
+
+const aki = new Aki(region);
+
+await aki.start();
+
+console.log('question:', aki.question);
+console.log('answers: ', aki.answers);
 ```
 
-### Sample for Starting A Game
+### Output from above console.log
 
-```json
-{  
-   "session":"5",
-   "signature":"628302187",
-   "question":"Is your character real?",
-   "answers":[  
-      "Yes",
-      "No",
-      "Don't know",
-      "Probably",
-      "Probably not"
-   ]
-}
+```bash
+question: Is your character real?
+answers: [  
+  "Yes",
+  "No",
+  "Don't know",
+  "Probably",
+  "Probably not"
+]
 ```
 
 
 ### Answer a Question (step)
 ```js
-const aki = require('aki-api');
+const Aki = require('aki-api');
 
-const nextInfo = await aki.step(region, session, signature, answerId, step, frontAddr); // must be in async function
-```
+const region = 'en';
+const aki = new Aki(region);
 
-#### Sample JSON Response
+await aki.start();
 
-```json
-{  
-   "nextQuestion":"Is your character a girl?",
-   "progress":"7.76009",
-   "answers":[  
-      "Yes",
-      "No",
-      "Don't know",
-      "Probably",
-      "Probably not"
-   ],
-   "currentStep": 0,
-   "nextStep": 1
-}
+const myAnswer = 0; // yes = 0
+
+await aki.step(myAnswer);
+
+console.log('question:', aki.question);
+console.log('answers:', aki.answers);
+console.log('progress:', aki.progress);
 ```
 
 ### Win/Show the akinator's guess
-#### To determine a win use the `progress` attribute. I like to do something like `if(nextInfo.progress >= 70)`
+#### To determine a win use the `progress` property. I like to do something like `if(aki.progress >= 70)`
 
 ```js
-const aki = require('aki-api');
+const Aki = require('aki-api');
 
-const win = await aki.win(region, session, signature, step); // must be in async function
+const region = 'en';
+const aki = new Aki(region);
 
-//example on getting akinator answers
-const firstGuess = win.answers[0].name;
-```
+await aki.start();
 
-### Example JSON response
+const myAnswer = 0; // yes = 0
 
-```json
-{
-  "answers": 
-  [
-    {
-      "id": "78924",
-      "name": "YoRHa No.2 Type B \/ 2B",
-      "id_base": "9241962",
-      "proba": "0.953825",
-      "description": "NieR: Automata",
-      "valide_contrainte": "1",
-      "ranking": "1678",
-      "minibase_addable": "0",
-      "relative_id": "-1",
-      "pseudo": "TitansBane",
-      "picture_path": "partenaire\/b\/9241962__1967810663.jpg",
-      "flag_photo": "2",
-      "absolute_picture_path": "http:\/\/photos.clarinea.fr\/BL_25_en\/600\/partenaire\/b\/9241962__1967810663.jpg"
-    },
-    {
-      "id": "85376",
-      "name": "2B",
-      "id_base": "11509417",
-      "proba": "0.0286481",
-      "description": "NieR: Automata",
-      "valide_contrainte": "1",
-      "ranking": "25597",
-      "minibase_addable": "0",
-      "relative_id": "-1",
-      "pseudo": "2BIsMyWaifu",
-      "picture_path": "partenaire\/o\/11509417__321330868.jpg",
-      "flag_photo": "2",
-      "absolute_picture_path": "http:\/\/photos.clarinea.fr\/BL_25_en\/partenaire\/o\/11509417__321330868.jpg"
-    }
-  ],
-  "currentStep": 18,
-  "nextStep": 19,
-  "guessCount": 2
+await aki.step(myAnswer);
+
+if (aki.progress >= 70) {
+  await aki.win();
+  console.log('firstGuess:', aki.answers);
+  console.log('guessCount:', aki.guessCount);
 }
 ```
 
-#### Example Code for Back (goes back to previous step; manage this on your own)
-
-```js
-const aki = require('aki-api');
-
-const previousStep = await aki.back(region, session, signature, answerId, step); // must be in async function
-
-//getting info from back
-const question = previousStep.nextQuestion;
-```
-
-#### Example JSON response
+### Output from above console.log
 
 ```json
-{
-  "nextQuestion": "Is your character a female?",
-  "progress": "2.43520",
-  "answers": [ "Yes", "No", "Don't know", "Probably", "Probably not" ],
-  "currentStep": 2,
-  "nextStep": 1 
-}
+firstGuess: [
+  {
+    "id": "78924",
+    "name": "YoRHa No.2 Type B \/ 2B",
+    "id_base": "9241962",
+    "proba": "0.953825",
+    "description": "NieR: Automata",
+    "valide_contrainte": "1",
+    "ranking": "1678",
+    "minibase_addable": "0",
+    "relative_id": "-1",
+    "pseudo": "TitansBane",
+    "picture_path": "partenaire\/b\/9241962__1967810663.jpg",
+    "flag_photo": "2",
+    "absolute_picture_path": "http:\/\/photos.clarinea.fr\/BL_25_en\/600\/partenaire\/b\/9241962__1967810663.jpg"
+  },
+  {
+    "id": "85376",
+    "name": "2B",
+    "id_base": "11509417",
+    "proba": "0.0286481",
+    "description": "NieR: Automata",
+    "valide_contrainte": "1",
+    "ranking": "25597",
+    "minibase_addable": "0",
+    "relative_id": "-1",
+    "pseudo": "2BIsMyWaifu",
+    "picture_path": "partenaire\/o\/11509417__321330868.jpg",
+    "flag_photo": "2",
+    "absolute_picture_path": "http:\/\/photos.clarinea.fr\/BL_25_en\/partenaire\/o\/11509417__321330868.jpg"
+  }
+]
+
+guessCount: 2
+```
+
+### Example Code for Back
+```js
+const Aki = require('aki-api');
+
+const region = 'en';
+const aki = new Aki(region);
+
+await aki.start();
+
+const myAnswer = 1; // no = 1
+
+await aki.step(myAnswer);
+await aki.back();
+
+console.log('question:', aki.question);
+console.log('answers:', aki.answers);
 ```
 
