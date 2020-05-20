@@ -71,8 +71,8 @@ module.exports = class Akinator {
   async back() {
     if (!this.uriObj) throw new Error(this.noSession);
 
-    this.currentStep = this.nextStep;
-    this.nextStep = this.currentStep - 1;
+    this.currentStep = this.currentStep - 1;
+    this.nextStep = this.nextStep - 1;
 
     const result = await request(`https://${this.urlApiWs}/ws/cancel_answer?&callback=${jQuery + new Date().getTime()}&session=${this.session}&signature=${this.signature}&step=${this.currentStep}&answer=-1`);
     const { body, statusCode } = result;
