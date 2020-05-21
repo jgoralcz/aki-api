@@ -17,7 +17,7 @@ const testGame = async (region) => {
     await aki.step(Math.floor(Math.random() * 2));
     console.log(`${region} - step: ${aki.currentStep} ${aki.question} ${aki.progress}`);
 
-    if (Math.floor(Math.random() * 10) < 1) {
+    if (Math.floor(Math.random() * 10) < 1 && aki.currentStep > 1) {
       await aki.back();
       console.log(`${region} - back: ${aki.currentStep} ${aki.question} ${aki.progress}`);
     }
