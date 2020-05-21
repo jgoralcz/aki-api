@@ -26,7 +26,7 @@ This package supports 15 different languages.
 ```js
  [
   'en',
-  'en_object',
+  'en_objects',
   'en_animals',
   'ar',
   'cn',
@@ -55,7 +55,7 @@ This package supports 15 different languages.
 ## Usage
 
 ```js
-const Aki = require('aki-api');
+const { Aki } = require('aki-api');
 
 const region = 'en';
 
@@ -80,10 +80,17 @@ answers: [
 ]
 ```
 
+### Get regions that I support
+```js
+  const { regions } = require('aki-api');
+  
+  console.log(regions);
+```
+
 
 ### Answer a Question (step)
 ```js
-const Aki = require('aki-api');
+const { Aki } = require('aki-api');
 
 const region = 'en';
 const aki = new Aki(region);
@@ -100,10 +107,10 @@ console.log('progress:', aki.progress);
 ```
 
 ### Win/Show the akinator's guess
-#### To determine a win use the `progress` property. I like to do something like `if(aki.progress >= 70)`
+#### To determine a win use the `progress` property. I like to do something like `if(aki.progress >= 70)` or check the current step against the max of 80
 
 ```js
-const Aki = require('aki-api');
+const { Aki } = require('aki-api');
 
 const region = 'en';
 const aki = new Aki(region);
@@ -114,7 +121,7 @@ const myAnswer = 0; // yes = 0
 
 await aki.step(myAnswer);
 
-if (aki.progress >= 70) {
+if (aki.progress >= 70 || aki.currentStep >= 78) {
   await aki.win();
   console.log('firstGuess:', aki.answers);
   console.log('guessCount:', aki.guessCount);
@@ -162,7 +169,7 @@ guessCount: 2
 
 ### Example Code for Back
 ```js
-const Aki = require('aki-api');
+const { Aki } = require('aki-api');
 
 const region = 'en';
 const aki = new Aki(region);
