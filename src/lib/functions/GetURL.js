@@ -1,6 +1,6 @@
 /**
  * Returns the id from the correct region.
- * @param akinatorRegion The regions aki supports: 'en', 'en_object', 'en_animals',
+ * @param akinatorRegion The regions aki supports: 'en', 'en_objects', 'en_animals',
  * 'ar', 'cn', 'de', 'de_animals', 'es', 'es_animals', 'fr', 'fr_objects', 'fr_animals',
  * 'il', 'it', 'it_animals', 'jp', 'jp_animals', 'kr', 'nl', 'pl', 'pt', 'ru', and 'tr'.
  * Default is 'en'
@@ -14,7 +14,7 @@ const regionURL = (akinatorRegion) => {
     case 'english':
       return { uri: 'en.akinator.com', urlApiWs: 'srv13.akinator.com:9361' };
 
-    case 'en_object':
+    case 'en_objects':
     case 'english_objects':
       return { uri: 'en.akinator.com', urlApiWs: 'srv2.akinator.com:9319' };
 
@@ -50,8 +50,8 @@ const regionURL = (akinatorRegion) => {
     case 'french':
       return { uri: 'fr.akinator.com', urlApiWs: 'srv3.akinator.com:9331' };
 
-    case 'fr_object':
-    case 'french_object':
+    case 'fr_objects':
+    case 'french_objects':
       return { uri: 'fr.akinator.com', urlApiWs: 'srv3.akinator.com:9330' };
 
     case 'fr_animals':
@@ -103,7 +103,7 @@ const regionURL = (akinatorRegion) => {
       return { uri: 'tr.akinator.com', urlApiWs: 'srv3.akinator.com:9332' };
 
     default:
-      return 'srv13.akinator.com:9361';
+      return { uri: 'en.akinator.com', urlApiWs: 'srv13.akinator.com:9361' };
   }
 };
 

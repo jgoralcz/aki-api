@@ -6,8 +6,7 @@ const getSession = require('../lib/functions/GetSession');
 
 module.exports = class Akinator {
   constructor(region) {
-    this.currentStep = -1;
-    this.nextStep = 0;
+    this.currentStep = 0;
     this.region = region;
     this.gameEnv = getURL(this.region);
     this.uri = this.gameEnv.uri;
@@ -50,7 +49,7 @@ module.exports = class Akinator {
   async step(answerId) {
     if (!this.uriObj) throw new Error(this.noSession);
 
-    const result = await request(`https://${this.uri}/answer_api?callback=${jQuery + new Date().getTime()}&urlApiWs=https://${this.urlApiWs}/ws&session=${this.session}&signature=${this.signature}&step=${this.nextStep}&answer=${answerId}&frontaddr=${this.frontaddr}`);
+    const result = await request(`https://${this.uri}/answer_api?callback=${jQuery + new Date().getTime()}&urlApiWs=https://${this.urlApiWs}/ws&session=${this.session}&signature=${this.signature}&step=${this.currentStep}&answer=${answerId}&frontaddr=${this.frontaddr}`);
     const { body, statusCode } = result;
 
     if (!statusCode || statusCode !== 200 || !body || body.completion !== 'OK' || !body.parameters || !body.parameters.question) {
@@ -58,8 +57,7 @@ module.exports = class Akinator {
       return;
     }
 
-    this.currentStep = this.nextStep;
-    this.nextStep = this.currentStep + 1;
+    this.currentStep = this.currentStep + 1;
     this.progress = body.parameters.progression;
     this.question = body.parameters.question;
     this.answers = body.parameters.answers.map(ans => ans.answer);
@@ -71,9 +69,6 @@ module.exports = class Akinator {
   async back() {
     if (!this.uriObj) throw new Error(this.noSession);
 
-    this.currentStep = this.currentStep - 1;
-    this.nextStep = this.nextStep - 1;
-
     const result = await request(`https://${this.urlApiWs}/ws/cancel_answer?&callback=${jQuery + new Date().getTime()}&session=${this.session}&signature=${this.signature}&step=${this.currentStep}&answer=-1`);
     const { body, statusCode } = result;
 
@@ -82,6 +77,7 @@ module.exports = class Akinator {
       return;
     }
 
+    this.currentStep = this.currentStep - 1;
     this.progress = body.parameters.progression;
     this.question = body.parameters.question;
     this.answers = body.parameters.answers.map(ans => ans.answer);
@@ -93,7 +89,7 @@ module.exports = class Akinator {
   async win() {
     if (!this.uriObj) throw new Error(this.noSession);
 
-    const result = await request(`https://${this.urlApiWs}/ws/list?callback=${jQuery + new Date().getTime()}&signature=${this.signature}&step=${this.nextStep}&session=${this.session}`);
+    const result = await request(`https://${this.urlApiWs}/ws/list?callback=${jQuery + new Date().getTime()}&signature=${this.signature}&step=${this.currentStep}&session=${this.session}`);
     const { body, statusCode } = result;
 
     if (!statusCode || statusCode !== 200 || !body || body.completion !== 'OK' || !body.parameters || !body.parameters.elements) {
