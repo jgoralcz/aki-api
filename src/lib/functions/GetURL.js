@@ -12,7 +12,7 @@ const regionURL = (akinatorRegion) => {
   switch (region) {
     case 'en':
     case 'english':
-      return { uri: 'en.akinator.com', urlApiWs: 'srv13.akinator.com:9361' };
+      return { uri: 'en.akinator.com', urlApiWs: 'srv2.akinator.com:9317' };
 
     case 'en_objects':
     case 'english_objects':
@@ -40,7 +40,7 @@ const regionURL = (akinatorRegion) => {
 
     case 'es':
     case 'spanish':
-      return { uri: 'es.akinator.com', urlApiWs: 'srv6.akinator.com:9354' };
+      return { uri: 'es.akinator.com', urlApiWs: 'srv6.akinator.com:9402' };
 
     case 'es_animals':
     case 'spanish_animals':
@@ -88,22 +88,22 @@ const regionURL = (akinatorRegion) => {
 
     case 'pl':
     case 'polish':
-      return { uri: 'pl.akinator.com', urlApiWs: 'srv14.akinator.com:9143' };
+      return { uri: 'pl.akinator.com', urlApiWs: 'srv14.akinator.com:9368' };
 
     case 'pt':
     case 'portuguese':
-      return { uri: 'pt.akinator.com', urlApiWs: 'srv11.akinator.com:9350' };
+      return { uri: 'pt.akinator.com', urlApiWs: 'srv11.akinator.com:9401' };
 
     case 'ru':
     case 'russian':
-      return { uri: 'ru.akinator.com', urlApiWs: 'srv12.akinator.com:9340' };
+      return { uri: 'ru.akinator.com', urlApiWs: 'srv12.akinator.com:9398' };
 
     case 'tr':
     case 'turkish':
       return { uri: 'tr.akinator.com', urlApiWs: 'srv3.akinator.com:9332' };
 
     default:
-      return { uri: 'en.akinator.com', urlApiWs: 'srv13.akinator.com:9361' };
+      return { uri: 'en.akinator.com', urlApiWs: 'srv2.akinator.com:9317' };
   }
 };
 
