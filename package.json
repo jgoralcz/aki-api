@@ -55,7 +55,11 @@
     "akinator",
     "magic",
     "aki promise",
-    "akinator promise"
+    "akinator promise",
+    "discord akinator",
+    "discord-akinator",
+    "discordjs akinator",
+    "discordjs-akinator"
   ],
   "license": "MIT",
   "main": "index.js",
