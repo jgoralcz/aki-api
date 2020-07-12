@@ -30,24 +30,45 @@ const testGame = async (region) => {
 
 (async () => {
   console.log('Starting tests...');
-  for (let i = 0; i < regions.length; i += 1) {
-    const region = regions[i];
+
+  // Gets first argument (region), if any
+  let selected = process.argv.length > 2 ? process.argv.slice(2)[0] : 'all';
+
+  // "npm test -- all" or just "npm test". Test all servers
+  if (selected == 'all') {
+    let passed = [], failed = [];
+    for (let i = 0; i < regions.length; i += 1) {
+      const region = regions[i];
+      try {
+        await testGame(region);
+        console.log(i + 1, 'test passed', region);
+        passed.push(region);
+      } catch (error) {
+        console.error(error);
+        console.error(i + 1, 'TEST FAILED', region);
+        failed.push(region);
+      }
+    }
+    
+    console.log(passed.length, 'tests passed in total');
+
+    if (failed.length) {
+      console.log(failed.length, 'tests failed. Servers that did not respond:');
+      for (let i = 0; i < failed.length; i += 1) {
+        console.log(failed[i]);
+      }
+    } else {
+      console.log('All tests passed!');
+    }
+  } else {
+    // "npm test -- <selected>". Tests the selected server
+    console.log('Testing ', selected);
     try {
-      await testGame(region);
-      console.log(i + 1, 'test passed', region);
+      await testGame(selected);
+      console.log('Test passed');
     } catch (error) {
       console.error(error);
-      console.error(i + 1, 'TEST FAILED', region);
+      console.error('TEST FAILED');
     }
   }
-  await testGame('random default to en pls');
-  // regions.forEach(async (region, i) => {
-  // try {
-  //   await testGame(region);
-  //   console.log(i + 1, 'test passed', region);
-  // } catch (error) {
-  //   console.error(error);
-  //   console.error(i + 1, 'TEST FAILED', region);
-  // }
-  // });
 })();
