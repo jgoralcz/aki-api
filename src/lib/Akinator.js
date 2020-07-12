@@ -5,15 +5,16 @@ const akinatorAPIErrors = require('../errors/AkinatorAPIErrors');
 const getSession = require('../lib/functions/GetSession');
 
 module.exports = class Akinator {
-  constructor(region) {
+  constructor(region, childMode) {
     this.currentStep = 0;
     this.region = region;
-    this.gameEnv = getURL(this.region);
-    this.uri = this.gameEnv.uri;
-    this.urlApiWs = this.gameEnv.urlApiWs;
+    this.uri = undefined;
+    this.urlApiWs = undefined;
     this.uriObj = null;
+    this.noUri = 'Could not find the uri or UrlApiWs. This most likely means that you have not started the game!';
     this.noSession = 'Could not find the game session. Please make sure you have started the game!';
     this.progress = 0.00;
+    this.childMod = (childMode === true || childMode === false) ? childMode : false;
 
     this.queston = '';
     this.answers = [];
@@ -23,11 +24,16 @@ module.exports = class Akinator {
   * Starts the akinator session and game.
   */
   async start() {
+    const server = await getURL(this.region);
+    if (!server) throw new Error(`Could not find a server matching the region ${this.region}`);
+
+    this.uri = server.url;
+    this.urlApiWs = server.urlWs;
     this.uriObj = await getSession();
     this.uid = this.uriObj.uid;
     this.frontaddr = this.uriObj.frontaddr;
 
-    const result = await request(`https://${this.uri}/new_session?callback=${jQuery + new Date().getTime()}&urlApiWs=https://${this.urlApiWs}/ws&partner=1&player=website-desktop&uid_ext_session=${this.uid}&frontaddr=${this.frontaddr}&constraint=ETAT%%3C%%3E%%27AV%%27&constraint=ETAT<>'AV'`);
+    const result = await request(`${this.uri}/new_session?callback=${jQuery + new Date().getTime()}&urlApiWs=${this.urlApiWs}&partner=1${this.childMode === true ? `&childMod=${this.childMode}` : ''}&player=website-desktop&uid_ext_session=${this.uid}&frontaddr=${this.frontaddr}&constraint=ETAT%%3C%%3E%%27AV%%27&constraint=ETAT<>'AV'`);
     const { body, statusCode } = result;
 
     if (!statusCode || statusCode !== 200 || !body || body.completion !== 'OK' || !body.parameters || !body.parameters.step_information.question) {
@@ -47,9 +53,10 @@ module.exports = class Akinator {
    * @param {BigInteger} answerId the answer to the question
    */
   async step(answerId) {
+    if (!this.uri || !this.urlApiWs) throw new Error(this.noUri);
     if (!this.uriObj) throw new Error(this.noSession);
 
-    const result = await request(`https://${this.uri}/answer_api?callback=${jQuery + new Date().getTime()}&urlApiWs=https://${this.urlApiWs}/ws&session=${this.session}&signature=${this.signature}&step=${this.currentStep}&answer=${answerId}&frontaddr=${this.frontaddr}`);
+    const result = await request(`${this.uri}/answer_api?callback=${jQuery + new Date().getTime()}&urlApiWs=${this.urlApiWs}${this.childMode === true ? `&childMod=${this.childMode}` : ''}&session=${this.session}&signature=${this.signature}&step=${this.currentStep}&answer=${answerId}&frontaddr=${this.frontaddr}`);
     const { body, statusCode } = result;
 
     if (!statusCode || statusCode !== 200 || !body || body.completion !== 'OK' || !body.parameters || !body.parameters.question) {
@@ -67,9 +74,10 @@ module.exports = class Akinator {
    * Reverts the game back a previous step.
    */
   async back() {
+    if (!this.uri || !this.urlApiWs) throw new Error(this.noUri);
     if (!this.uriObj) throw new Error(this.noSession);
 
-    const result = await request(`https://${this.urlApiWs}/ws/cancel_answer?&callback=${jQuery + new Date().getTime()}&session=${this.session}&signature=${this.signature}&step=${this.currentStep}&answer=-1`);
+    const result = await request(`${this.urlApiWs}/cancel_answer?&callback=${jQuery + new Date().getTime()}&session=${this.session}${this.childMode === true ? `&childMod=${this.childMode}` : ''}&signature=${this.signature}&step=${this.currentStep}&answer=-1`);
     const { body, statusCode } = result;
 
     if (!statusCode || statusCode !== 200 || !body || body.completion !== 'OK' || !body.parameters || !body.parameters.question) {
@@ -87,9 +95,10 @@ module.exports = class Akinator {
    * The akinator attempts to make a guess and win the game.
    */
   async win() {
+    if (!this.uri || !this.urlApiWs) throw new Error(this.noUri);
     if (!this.uriObj) throw new Error(this.noSession);
 
-    const result = await request(`https://${this.urlApiWs}/ws/list?callback=${jQuery + new Date().getTime()}&signature=${this.signature}&step=${this.currentStep}&session=${this.session}`);
+    const result = await request(`${this.urlApiWs}/list?callback=${jQuery + new Date().getTime()}&signature=${this.signature}${this.childMode === true ? `&childMod=${this.childMode}` : ''}&step=${this.currentStep}&session=${this.session}`);
     const { body, statusCode } = result;
 
     if (!statusCode || statusCode !== 200 || !body || body.completion !== 'OK' || !body.parameters || !body.parameters.elements) {
