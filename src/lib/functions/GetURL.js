@@ -1,3 +1,38 @@
+const rp = require('request-promise');
+
+/**
+ * gets the server automatically, so we don't rely on hard coded values.
+ * @param {string} region the requested region to be parsed
+ * @return {object} obj with url and urlWs or undefined
+ */
+const getServer = async (region) => {
+  try {
+    const split = region.split('_');
+    const [language, themeName] = split;
+
+    const url = `https://${language}.akinator.com`;
+    const page = await rp.get(url);
+
+    const regex = /\[{"translated_theme_name":"[\s\S]*","urlWs":"https:\\\/\\\/srv[0-9]+\.akinator\.com:[0-9]+\\\/ws","subject_id":"[0-9]+"}]/gim;
+    const parsed = JSON.parse(page.match(regex));
+
+    if (!parsed || !parsed[0] || !parsed[0].urlWs || parsed.length <= 0) return undefined;
+
+    const found = parsed.find(theme => theme.translated_theme_name.toLowerCase() === themeName);
+
+    const obj = {
+      url,
+      urlWs: themeName && found && found.UrlWs ? found.UrlWs : parsed[0].urlWs,
+    };
+
+    return obj;
+  } catch (error) {
+    console.error(error);
+  }
+  return undefined;
+};
+
+
 /**
  * Returns the id from the correct region.
  * @param akinatorRegion The regions aki supports: 'en', 'en_objects', 'en_animals',
@@ -6,104 +41,104 @@
  * Default is 'en'
  * @returns {string}
  */
-const regionURL = (akinatorRegion) => {
+const regionURL = async (akinatorRegion) => {
   const region = akinatorRegion.toLowerCase();
 
   switch (region) {
     case 'en':
     case 'english':
-      return { uri: 'en.akinator.com', urlApiWs: 'srv2.akinator.com:9317' };
+      return getServer('en');
 
     case 'en_objects':
     case 'english_objects':
-      return { uri: 'en.akinator.com', urlApiWs: 'srv2.akinator.com:9319' };
+      return getServer('en_objects');
 
     case 'en_animals':
     case 'english_animals':
-      return { uri: 'en.akinator.com', urlApiWs: 'srv2.akinator.com:9318' };
+      return getServer('en_animals');
 
     case 'ar':
     case 'arabic':
-      return { uri: 'ar.akinator.com', urlApiWs: 'srv2.akinator.com:9315' };
+      return getServer('ar');
 
     case 'cn':
     case 'chinese':
-      return { uri: 'cn.akinator.com', urlApiWs: 'srv11.akinator.com:9344' };
+      return getServer('cn');
 
     case 'de':
     case 'german':
-      return { uri: 'de.akinator.com', urlApiWs: 'srv14.akinator.com:9369' };
+      return getServer('de');
 
     case 'de_animals':
     case 'german_animals':
-      return { uri: 'de.akinator.com', urlApiWs: 'srv14.akinator.com:9370' };
+      return getServer('de_animals');
 
     case 'es':
     case 'spanish':
-      return { uri: 'es.akinator.com', urlApiWs: 'srv6.akinator.com:9402' };
+      return getServer('es');
 
     case 'es_animals':
     case 'spanish_animals':
-      return { uri: 'es.akinator.com', urlApiWs: 'srv13.akinator.com:9362' };
+      return getServer('es_animals');
 
     case 'fr':
     case 'french':
-      return { uri: 'fr.akinator.com', urlApiWs: 'srv3.akinator.com:9331' };
+      return getServer('fr');
 
     case 'fr_objects':
     case 'french_objects':
-      return { uri: 'fr.akinator.com', urlApiWs: 'srv3.akinator.com:9330' };
+      return getServer('fr_objects');
 
     case 'fr_animals':
     case 'french_animals':
-      return { uri: 'fr.akinator.com', urlApiWs: 'srv3.akinator.com:9329' };
+      return getServer('fr_animals');
 
     case 'il':
     case 'hebrew':
-      return { uri: 'il.akinator.com', urlApiWs: 'srv12.akinator.com:9339' };
+      return getServer('il');
 
     case 'it':
     case 'italian':
-      return { uri: 'it.akinator.com', urlApiWs: 'srv9.akinator.com:9380' };
+      return getServer('it');
 
     case 'it_animals':
     case 'italian_animals':
-      return { uri: 'it.akinator.com', urlApiWs: 'srv9.akinator.com:9383' };
+      return getServer('it_animals');
 
     case 'jp':
     case 'japanese':
-      return { uri: 'jp.akinator.com', urlApiWs: 'srv11.akinator.com:9349' };
+      return getServer('jp');
 
     case 'jp_animals':
     case 'japanese_animals':
-      return { uri: 'jp.akinator.com', urlApiWs: 'srv11.akinator.com:9352' };
+      return getServer('jp_animals');
 
     case 'kr':
     case 'korean':
-      return { uri: 'kr.akinator.com', urlApiWs: 'srv2.akinator.com:9316' };
+      return getServer('kr');
 
     case 'nl':
     case 'dutch':
-      return { uri: 'nl.akinator.com', urlApiWs: 'srv9.akinator.com:9381' };
+      return getServer('nl');
 
     case 'pl':
     case 'polish':
-      return { uri: 'pl.akinator.com', urlApiWs: 'srv14.akinator.com:9368' };
+      return getServer('pl');
 
     case 'pt':
     case 'portuguese':
-      return { uri: 'pt.akinator.com', urlApiWs: 'srv11.akinator.com:9401' };
+      return getServer('pt');
 
     case 'ru':
     case 'russian':
-      return { uri: 'ru.akinator.com', urlApiWs: 'srv12.akinator.com:9398' };
+      return getServer('ru');
 
     case 'tr':
     case 'turkish':
-      return { uri: 'tr.akinator.com', urlApiWs: 'srv3.akinator.com:9332' };
+      return getServer('tr');
 
     default:
-      return { uri: 'en.akinator.com', urlApiWs: 'srv2.akinator.com:9317' };
+      return region ? getServer(region) : getServer('en');
   }
 };
 
