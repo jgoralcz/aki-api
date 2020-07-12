@@ -128,6 +128,29 @@ if (aki.progress >= 70 || aki.currentStep >= 78) {
 }
 ```
 
+### Enable child mode
+#### Simply pass in true or false for the 2nd parameter in the constructor.
+
+```js
+const { Aki } = require('aki-api');
+
+const region = 'en';
+const childMode = true;
+const aki = new Aki(region, childMode);
+
+await aki.start();
+
+const myAnswer = 0; // yes = 0
+
+await aki.step(myAnswer);
+
+if (aki.progress >= 70 || aki.currentStep >= 78) {
+  await aki.win();
+  console.log('firstGuess:', aki.answers);
+  console.log('guessCount:', aki.guessCount);
+}
+```
+
 ### Output from above console.log
 
 ```json

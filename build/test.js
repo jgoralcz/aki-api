@@ -1,25 +1,25 @@
 /* eslint-disable no-console */
 const { Aki, regions } = require('../index');
 
-const testGame = async (region) => {
+const testGame = async (region, childMode) => {
   const aki = new Aki(region);
 
   await aki.start();
-  console.log(`${region} - start: ${aki.question} ${aki.progress}`);
+  console.log(`${region} ${childMode} - start: ${aki.question} ${aki.progress}`);
 
   await aki.step(0);
-  console.log(`${region} - step: ${aki.currentStep} ${aki.question} ${aki.progress}`);
+  console.log(`${region} ${childMode} - step: ${aki.currentStep} ${aki.question} ${aki.progress}`);
 
   await aki.back();
-  console.log(`${region} - back: ${aki.currentStep} ${aki.question} ${aki.progress}`);
+  console.log(`${region} ${childMode} - back: ${aki.currentStep} ${aki.question} ${aki.progress}`);
 
   while (aki.progress <= 50 && aki.currentStep < 15) {
     await aki.step(Math.floor(Math.random() * 2));
-    console.log(`${region} - step: ${aki.currentStep} ${aki.question} ${aki.progress}`);
+    console.log(`${region} ${childMode} - step: ${aki.currentStep} ${aki.question} ${aki.progress}`);
 
     if (Math.floor(Math.random() * 10) < 1 && aki.currentStep > 1) {
       await aki.back();
-      console.log(`${region} - back: ${aki.currentStep} ${aki.question} ${aki.progress}`);
+      console.log(`${region} ${childMode} - back: ${aki.currentStep} ${aki.question} ${aki.progress}`);
     }
   }
 
@@ -33,14 +33,16 @@ const testGame = async (region) => {
   for (let i = 0; i < regions.length; i += 1) {
     const region = regions[i];
     try {
-      await testGame(region);
+      const childMode = Math.random() > 0.5;
+      await testGame(region, childMode);
       console.log(i + 1, 'test passed', region);
     } catch (error) {
       console.error(error);
       console.error(i + 1, 'TEST FAILED', region);
     }
   }
-  await testGame('random default to en pls');
+  await testGame('this test will error').catch(console.error('Intentionally failed'));
+  await testGame('en', true);
   // regions.forEach(async (region, i) => {
   // try {
   //   await testGame(region);
