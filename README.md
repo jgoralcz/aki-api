@@ -130,8 +130,7 @@ if (aki.progress >= 70 || aki.currentStep >= 78) {
 
 ### Enable child mode
 #### Simply pass in true or false for the 2nd parameter in the constructor.
-The child mode prevents showing questions like *Is your chracter a porn actor* and the results will only contain images that are conform with the child mode.
-The results will still contain characters which are not confrom with the child mode. These have a `X` in the `pseudo` field. For your application you can decide if you want to continue until you find a character which is not labeld `X` or stop and show a text like *I know who you are thinking of, but I believe this is not for young people*(This is how it is done on [akinator.com](akinator.com))
+The child mode prevents showing explicit questions. However, the results (from `aki.win()`) will still contain characters that do contain NSFW (non-child mode content). To check if the images contain NSFW content, you need to check for a property called nsfw which will be true or false (this can be inaccurate to some degree) or filter by the property `pseudo`. The `pseudo` property is a string that marks NSFW content with an `'X'` or other NSFW term to describe the character. When child mode is enbaled on the site and a NSFW character is guessed, Akinator says, "I know who you are thinking of, but I believe this is not for young people".
 
 ```js
 const { Aki } = require('aki-api');
