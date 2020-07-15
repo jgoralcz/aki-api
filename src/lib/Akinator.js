@@ -14,8 +14,11 @@ module.exports = class Akinator {
     this.noUri = 'Could not find the uri or UrlApiWs. This most likely means that you have not started the game!';
     this.noSession = 'Could not find the game session. Please make sure you have started the game!';
     this.progress = 0.00;
-    this.childMode = (childMode === true || childMode === false) ? childMode : false;
-    this.question_filter = (this.childMode) ? 'cat%3D1' : "";
+    this.childMode = {
+      childMod: childMode === true,
+      softConstraint: childMode === true ? 'ETAT%3D%27EN%27' : '',
+      questionFilter: childMode === true ? 'cat%3D1' : '',
+    };
 
     this.queston = '';
     this.answers = [];
@@ -34,7 +37,7 @@ module.exports = class Akinator {
     this.uid = this.uriObj.uid;
     this.frontaddr = this.uriObj.frontaddr;
 
-    const result = await request(`${this.uri}/new_session?callback=${jQuery + new Date().getTime()}&urlApiWs=${this.urlApiWs}&partner=1${this.childMode === true ? `&childMod=${this.childMode}` : ''}&player=website-desktop&uid_ext_session=${this.uid}&frontaddr=${this.frontaddr}&constraint=ETAT<>'AV'&question_filter=${this.question_filter}`);
+    const result = await request(`${this.uri}/new_session?callback=${jQuery + new Date().getTime()}&urlApiWs=${this.urlApiWs}&partner=1&childMod=${this.childMode.childMod}&player=website-desktop&uid_ext_session=${this.uid}&frontaddr=${this.frontaddr}&constraint=ETAT<>'AV'&soft_constraint=${this.childMode.softConstraint}&question_filter=${this.childMode.questionFilter}`);
     const { body, statusCode } = result;
 
     if (!statusCode || statusCode !== 200 || !body || body.completion !== 'OK' || !body.parameters || !body.parameters.step_information.question) {
@@ -57,7 +60,7 @@ module.exports = class Akinator {
     if (!this.uri || !this.urlApiWs) throw new Error(this.noUri);
     if (!this.uriObj) throw new Error(this.noSession);
 
-    const result = await request(`${this.uri}/answer_api?callback=${jQuery + new Date().getTime()}&urlApiWs=${this.urlApiWs}${this.childMode === true ? `&childMod=${this.childMode}` : ''}&session=${this.session}&signature=${this.signature}&step=${this.currentStep}&answer=${answerId}&frontaddr=${this.frontaddr}&question_filter=${this.question_filter}`);
+    const result = await request(`${this.uri}/answer_api?callback=${jQuery + new Date().getTime()}&urlApiWs=${this.urlApiWs}&childMod=${this.childMode.childMod}&session=${this.session}&signature=${this.signature}&step=${this.currentStep}&answer=${answerId}&frontaddr=${this.frontaddr}&question_filter=${this.childMode.questionFilter}`);
     const { body, statusCode } = result;
 
     if (!statusCode || statusCode !== 200 || !body || body.completion !== 'OK' || !body.parameters || !body.parameters.question) {
@@ -78,7 +81,7 @@ module.exports = class Akinator {
     if (!this.uri || !this.urlApiWs) throw new Error(this.noUri);
     if (!this.uriObj) throw new Error(this.noSession);
 
-    const result = await request(`${this.urlApiWs}/cancel_answer?&callback=${jQuery + new Date().getTime()}&session=${this.session}${this.childMode === true ? `&childMod=${this.childMode}` : ''}&signature=${this.signature}&step=${this.currentStep}&answer=-1`);
+    const result = await request(`${this.urlApiWs}/cancel_answer?&callback=${jQuery + new Date().getTime()}&session=${this.session}&childMod=${this.childMode.childMod}&signature=${this.signature}&step=${this.currentStep}&answer=-1&question_filter=${this.childMode.questionFilter}`);
     const { body, statusCode } = result;
 
     if (!statusCode || statusCode !== 200 || !body || body.completion !== 'OK' || !body.parameters || !body.parameters.question) {
@@ -108,6 +111,10 @@ module.exports = class Akinator {
     }
 
     this.answers = (body.parameters.elements || []).map(ele => ele.element);
+    for (let i = 0; i < this.answers.length; i += 1) {
+      this.answers[i].nsfw = ['x', 'pornstar'].includes(this.answers[i].pseudo.toLowerCase());
+    }
+
     this.guessCount = body.parameters.NbObjetsPertinents;
   }
 };
