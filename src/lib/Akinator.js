@@ -112,7 +112,7 @@ module.exports = class Akinator {
 
     this.answers = (body.parameters.elements || []).map(ele => ele.element);
     for (let i = 0; i < this.answers.length; i += 1) {
-      this.answers[i].nsfw = ['x', 'pornstar'].includes(this.answers[i].pseudo.toLowerCase());
+      this.answers[i].nsfw = ['x', 'pornstar'].includes((this.answers[i].pseudo || '').toLowerCase());
     }
 
     this.guessCount = body.parameters.NbObjetsPertinents;
