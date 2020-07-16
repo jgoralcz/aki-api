@@ -25,31 +25,56 @@ const testGame = async (region, childMode) => {
 
 
   await aki.win();
-  // console.log('win:', aki.question, aki.answers);
+  console.log('win:', aki.question);
 };
 
 (async () => {
   console.log('Starting tests...');
-  for (let i = 0; i < regions.length; i += 1) {
-    const region = regions[i];
-    try {
-      const childMode = Math.random() > 0.5;
-      await testGame(region, childMode);
-      console.log(i + 1, 'test passed', region);
-    } catch (error) {
-      console.error(error);
-      console.error(i + 1, 'TEST FAILED', region);
+
+  const selectedRegion = process.argv.length > 2 ? process.argv.slice(2)[0] : 'all';
+
+  // "npm test -- all" or just "npm test". Test all servers
+  if (selectedRegion === 'all') {
+    const passed = [];
+    const failed = [];
+    for (let i = 0; i < regions.length; i += 1) {
+      const region = regions[i];
+      try {
+        const childMode = Math.random() > 0.5;
+        await testGame(region, childMode);
+        console.log(i + 1, 'test passed', region);
+        passed.push(region);
+      } catch (error) {
+        console.error(error);
+        console.error(i + 1, 'TEST FAILED', region);
+        failed.push(region);
+      }
     }
+
+    console.log(passed.length, 'tests passed in total');
+
+    if (failed.length > 0) {
+      console.log(failed.length, 'tests failed. Servers that did not respond:');
+      for (let i = 0; i < failed.length; i += 1) {
+        console.log(failed[i]);
+      }
+      return;
+    }
+
+    console.log('All tests passed!');
+    return;
   }
-  await testGame('this test will error').catch(console.error('Intentionally failed'));
-  await testGame('en', true);
-  // regions.forEach(async (region, i) => {
-  // try {
-  //   await testGame(region);
-  //   console.log(i + 1, 'test passed', region);
-  // } catch (error) {
-  //   console.error(error);
-  //   console.error(i + 1, 'TEST FAILED', region);
-  // }
-  // });
+
+  // "npm test -- <selected> <childmode>". Tests the selected server.
+  // If <childMode> is 'childMode', the test will be made with child mode on
+  // If you run "npm test -- <selected> (nothing or any string after)", child mode will be off
+  console.log('Testing ', selectedRegion);
+  const childMode = process.argv.length > 3 ? process.argv.slice(2)[1].toLowerCase() === 'childmode' : false;
+  try {
+    await testGame(selectedRegion, childMode);
+    console.log('Test passed');
+  } catch (error) {
+    console.error(error);
+    console.error('TEST FAILED');
+  }
 })();
