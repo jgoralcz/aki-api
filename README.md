@@ -130,6 +130,7 @@ if (aki.progress >= 70 || aki.currentStep >= 78) {
 
 ### Enable child mode
 #### Simply pass in true or false for the 2nd parameter in the constructor.
+The child mode prevents showing explicit questions. However, the results (from `aki.win()`) will still contain characters that do contain NSFW (non-child mode content). To check if the images contain NSFW content, you need to check for a property called nsfw which will be true or false (this can be inaccurate to some degree) or filter by the property `pseudo`. The `pseudo` property is a string that marks NSFW content with an `'X'` or other NSFW term to describe the character. When child mode is enbaled on the site and a NSFW character is guessed, Akinator says, "I know who you are thinking of, but I believe this is not for young people".
 
 ```js
 const { Aki } = require('aki-api');
