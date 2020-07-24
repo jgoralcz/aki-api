@@ -22,7 +22,7 @@ const getServer = async (region) => {
 
     const obj = {
       url,
-      urlWs: themeName && found && found.UrlWs ? found.UrlWs : parsed[0].urlWs,
+      urlWs: themeName && found && found.urlWs ? found.urlWs : parsed[0].urlWs,
     };
 
     return obj;
