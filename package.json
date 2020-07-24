@@ -72,7 +72,7 @@
     "start": "node index.js",
     "test": "node build/test.js"
   },
-  "version": "5.1.0",
+  "version": "5.1.1",
   "devDependencies": {
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.2.0",
