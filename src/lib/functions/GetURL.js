@@ -1,4 +1,4 @@
-const rp = require('request-promise');
+const axios = require('axios');
 
 /**
  * gets the server automatically, so we don't rely on hard coded values.
@@ -11,10 +11,10 @@ const getServer = async (region) => {
     const [language, themeName] = split;
 
     const url = `https://${language}.akinator.com`;
-    const page = await rp.get(url);
+    const { data } = await axios.get(url);
 
     const regex = /\[{"translated_theme_name":"[\s\S]*","urlWs":"https:\\\/\\\/srv[0-9]+\.akinator\.com:[0-9]+\\\/ws","subject_id":"[0-9]+"}]/gim;
-    const parsed = JSON.parse(page.match(regex));
+    const parsed = JSON.parse(data.match(regex));
 
     if (!parsed || !parsed[0] || !parsed[0].urlWs || parsed.length <= 0) return undefined;
 
