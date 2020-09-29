@@ -1,4 +1,4 @@
-const request = require('request-promise');
+const axios = require('axios');
 const { patternSession, issues } = require('../constants/Client');
 
 /**
@@ -6,8 +6,8 @@ const { patternSession, issues } = require('../constants/Client');
  * @returns {Promise<{uid: string, frontaddr: string}>}
  */
 const getSession = async () => {
-  const html = await request({ uri: 'https://en.akinator.com/game' }).catch(() => null);
-
+  let html = await axios.get('https://en.akinator.com/game').catch(() => null);
+  html = html.data;
   // use pattern matching to get the uid and frontaddr. It looks like:
   // var uid_ext_session = 'a7560672-6944-11e9-bbad-0cc47a40ef18';
   // var frontaddr = 'NDYuMTA1LjExMC40NQ==';
