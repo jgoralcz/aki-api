@@ -1,8 +1,8 @@
-const request = require('../lib/functions/Request');
-const getURL = require('../lib/functions/GetURL');
-const { jQuery } = require('../lib/constants/Client');
+const request = require('./functions/Request');
+const getURL = require('./functions/GetURL');
+const { jQuery } = require('./constants/Client');
 const akinatorAPIErrors = require('../errors/AkinatorAPIErrors');
-const getSession = require('../lib/functions/GetSession');
+const getSession = require('./functions/GetSession');
 
 module.exports = class Akinator {
   constructor(region, childMode) {
@@ -39,7 +39,6 @@ module.exports = class Akinator {
 
     const result = await request(`${this.uri}/new_session?callback=${jQuery + new Date().getTime()}&urlApiWs=${this.urlApiWs}&partner=1&childMod=${this.childMode.childMod}&player=website-desktop&uid_ext_session=${this.uid}&frontaddr=${this.frontaddr}&constraint=ETAT<>'AV'&soft_constraint=${this.childMode.softConstraint}&question_filter=${this.childMode.questionFilter}`);
     const { data, status } = result;
-    
 
     if (!status || status !== 200 || !data || data.completion !== 'OK' || !data.parameters || !data.parameters.step_information.question) {
       akinatorAPIErrors(data, this.region);
@@ -50,7 +49,7 @@ module.exports = class Akinator {
     this.signature = data.parameters.identification.signature;
     this.question = data.parameters.step_information.question;
     this.challenge_auth = data.parameters.identification.challenge_auth;
-    this.answers = data.parameters.step_information.answers.map(ans => ans.answer);
+    this.answers = data.parameters.step_information.answers.map((ans) => ans.answer);
   }
 
   /**
@@ -69,10 +68,10 @@ module.exports = class Akinator {
       return;
     }
 
-    this.currentStep = this.currentStep + 1;
+    this.currentStep += 1;
     this.progress = data.parameters.progression;
     this.question = data.parameters.question;
-    this.answers = data.parameters.answers.map(ans => ans.answer);
+    this.answers = data.parameters.answers.map((ans) => ans.answer);
   }
 
   /**
@@ -90,10 +89,10 @@ module.exports = class Akinator {
       return;
     }
 
-    this.currentStep = this.currentStep - 1;
+    this.currentStep -= 1;
     this.progress = data.parameters.progression;
     this.question = data.parameters.question;
-    this.answers = data.parameters.answers.map(ans => ans.answer);
+    this.answers = data.parameters.answers.map((ans) => ans.answer);
   }
 
   /**
@@ -111,7 +110,7 @@ module.exports = class Akinator {
       return;
     }
 
-    this.answers = (data.parameters.elements || []).map(ele => ele.element);
+    this.answers = (data.parameters.elements || []).map((ele) => ele.element);
     for (let i = 0; i < this.answers.length; i += 1) {
       this.answers[i].nsfw = ['x', 'pornstar'].includes((this.answers[i].pseudo || '').toLowerCase());
     }
