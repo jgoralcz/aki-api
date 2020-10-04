@@ -1,15 +1,15 @@
-name: unittest
+name: Eslint
 on:
   push:
-    branches:
-      - "*"
+    branches: 
+      - '*'
   pull_request:
-    branches:
-      - "*"
+    branches: 
+      - '*'
 jobs:
-  tests:
+  eslint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - run: npm install
-      - run: npm run test
+      - run: npm run eslint
