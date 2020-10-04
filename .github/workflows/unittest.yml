@@ -1,0 +1,24 @@
+name: NodejsCI
+
+on:
+  push:
+    branches:
+      - "*"
+    paths-ignore:
+      - '.github/**'
+      - '.circleci/**'
+      - 'LICENSE'
+  pull_request:
+    branches:
+      - "*"
+    paths-ignore:
+      - '.github/**'
+      - '.circleci/**'
+      - 'LICENSE'
+jobs:
+  Unittest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: npm install
+      - run: npm run test
