@@ -69,7 +69,8 @@
   },
   "scripts": {
     "start": "node index.js",
-    "test": "node build/test.js"
+    "test": "node build/test.js",
+    "eslint": "eslint **/*.js"
   },
   "version": "5.1.1",
   "devDependencies": {
