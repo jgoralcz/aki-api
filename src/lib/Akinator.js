@@ -37,8 +37,7 @@ module.exports = class Akinator {
     this.uid = this.uriObj.uid;
     this.frontaddr = this.uriObj.frontaddr;
 
-    const result = await request(`${this.uri}/new_session?callback=${jQuery + new Date().getTime()}&urlApiWs=${this.urlApiWs}&partner=1&childMod=${this.childMode.childMod}&player=website-desktop&uid_ext_session=${this.uid}&frontaddr=${this.frontaddr}&constraint=ETAT<>'AV'&soft_constraint=${this.childMode.softConstraint}&question_filter=${this.childMode.questionFilter}`);
-    const { data, status } = result;
+    const { data, status } = await request(`${this.uri}/new_session?callback=${jQuery + new Date().getTime()}&urlApiWs=${this.urlApiWs}&partner=1&childMod=${this.childMode.childMod}&player=website-desktop&uid_ext_session=${this.uid}&frontaddr=${this.frontaddr}&constraint=ETAT<>'AV'&soft_constraint=${this.childMode.softConstraint}&question_filter=${this.childMode.questionFilter}`);
 
     if (!status || status !== 200 || !data || data.completion !== 'OK' || !data.parameters || !data.parameters.step_information.question) {
       akinatorAPIErrors(data, this.region);
@@ -60,8 +59,7 @@ module.exports = class Akinator {
     if (!this.uri || !this.urlApiWs) throw new Error(this.noUri);
     if (!this.uriObj) throw new Error(this.noSession);
 
-    const result = await request(`${this.uri}/answer_api?callback=${jQuery + new Date().getTime()}&urlApiWs=${this.urlApiWs}&childMod=${this.childMode.childMod}&session=${this.session}&signature=${this.signature}&step=${this.currentStep}&answer=${answerId}&frontaddr=${this.frontaddr}&question_filter=${this.childMode.questionFilter}`);
-    const { data, status } = result;
+    const { data, status } = await request(`${this.uri}/answer_api?callback=${jQuery + new Date().getTime()}&urlApiWs=${this.urlApiWs}&childMod=${this.childMode.childMod}&session=${this.session}&signature=${this.signature}&step=${this.currentStep}&answer=${answerId}&frontaddr=${this.frontaddr}&question_filter=${this.childMode.questionFilter}`);
 
     if (!status || status !== 200 || !data || data.completion !== 'OK' || !data.parameters || !data.parameters.question) {
       akinatorAPIErrors(data, this.region);
@@ -81,8 +79,7 @@ module.exports = class Akinator {
     if (!this.uri || !this.urlApiWs) throw new Error(this.noUri);
     if (!this.uriObj) throw new Error(this.noSession);
 
-    const result = await request(`${this.urlApiWs}/cancel_answer?&callback=${jQuery + new Date().getTime()}&session=${this.session}&childMod=${this.childMode.childMod}&signature=${this.signature}&step=${this.currentStep}&answer=-1&question_filter=${this.childMode.questionFilter}`);
-    const { data, status } = result;
+    const { data, status } = await request(`${this.urlApiWs}/cancel_answer?&callback=${jQuery + new Date().getTime()}&session=${this.session}&childMod=${this.childMode.childMod}&signature=${this.signature}&step=${this.currentStep}&answer=-1&question_filter=${this.childMode.questionFilter}`);
 
     if (!status || status !== 200 || !data || data.completion !== 'OK' || !data.parameters || !data.parameters.question) {
       akinatorAPIErrors(data, this.region);
@@ -102,8 +99,7 @@ module.exports = class Akinator {
     if (!this.uri || !this.urlApiWs) throw new Error(this.noUri);
     if (!this.uriObj) throw new Error(this.noSession);
 
-    const result = await request(`${this.urlApiWs}/list?callback=${jQuery + new Date().getTime()}&signature=${this.signature}${this.childMode === true ? `&childMod=${this.childMode}` : ''}&step=${this.currentStep}&session=${this.session}`);
-    const { data, status } = result;
+    const { data, status } = await request(`${this.urlApiWs}/list?callback=${jQuery + new Date().getTime()}&signature=${this.signature}${this.childMode === true ? `&childMod=${this.childMode}` : ''}&step=${this.currentStep}&session=${this.session}`);
 
     if (!status || status !== 200 || !data || data.completion !== 'OK' || !data.parameters || !data.parameters.elements) {
       akinatorAPIErrors(data, this.region);
