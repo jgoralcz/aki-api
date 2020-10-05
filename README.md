@@ -2,6 +2,7 @@
 [![CircleCI](https://circleci.com/gh/jgoralcz/aki-api/tree/master.svg?style=svg)](https://circleci.com/gh/jgoralcz/aki-api/tree/master)
 [![npm version](https://badge.fury.io/js/aki-api.svg)](https://www.npmjs.com/package/aki-api)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Actions Status](https://github.com/jgoralcz/aki-api/workflows/unittest/badge.svg)](https://github.com/jgoralcz/aki-api/actions)
 
 An API for Akinator based in NodeJS.
 
