@@ -47,7 +47,8 @@ This package supports 15 different languages.
   'pl',
   'pt',
   'ru',
-  'tr'
+  'tr',
+  'id'
 ]
 ```
 

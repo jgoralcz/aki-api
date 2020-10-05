@@ -18,7 +18,7 @@ const getServer = async (region) => {
 
     if (!parsed || !parsed[0] || !parsed[0].urlWs || parsed.length <= 0) return undefined;
 
-    const found = parsed.find(theme => theme.translated_theme_name.toLowerCase() === themeName);
+    const found = parsed.find((theme) => theme.translated_theme_name.toLowerCase() === themeName);
 
     const obj = {
       url,
@@ -31,7 +31,6 @@ const getServer = async (region) => {
   }
   return undefined;
 };
-
 
 /**
  * Returns the id from the correct region.
@@ -136,6 +135,10 @@ const regionURL = async (akinatorRegion) => {
     case 'tr':
     case 'turkish':
       return getServer('tr');
+
+    case 'id':
+    case 'indonesia':
+      return getServer('id');
 
     default:
       return region ? getServer(region) : getServer('en');

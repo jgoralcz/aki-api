@@ -69,12 +69,13 @@
   },
   "scripts": {
     "start": "node index.js",
-    "test": "node build/test.js"
+    "test": "node build/test.js",
+    "eslint": "eslint **/*.js"
   },
-  "version": "5.1.0",
+  "version": "5.1.1",
   "devDependencies": {
-    "eslint": "^5.16.0",
-    "eslint-config-airbnb-base": "^13.2.0",
-    "eslint-plugin-import": "^2.20.2"
+    "eslint": "^7.10.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.1"
   }
 }
