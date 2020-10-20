@@ -5,12 +5,6 @@
 
 An API for Akinator based in NodeJS.
 
-**IMPORTANT:** Version 4 is a functional approach while Version 5 is an object-oriented approach. Please be aware of the differences!
-
-This package contains all the features that you will need to interact with the Akinator API.
-Below you will find information on how to install the package and utilize the package's features.
-This package supports 15 different languages.
-
 ## Requirements
 | Requirement | Version |
 | ---|---|
