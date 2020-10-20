@@ -25,6 +25,7 @@ const regions = [
   'pt',
   'ru',
   'tr',
+  'id',
 ];
 
 module.exports = {

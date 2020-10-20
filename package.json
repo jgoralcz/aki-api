@@ -45,8 +45,7 @@
     "url": "https://github.com/jgoralcz/aki-api/issues"
   },
   "dependencies": {
-    "request": "^2.88.2",
-    "request-promise": "^4.2.5"
+    "axios": "^0.20.0"
   },
   "description": "An API for Akinator.  Supports up to 15 languages and has two English servers.",
   "homepage": "https://github.com/jgoralcz/aki-api#readme",
@@ -70,12 +69,13 @@
   },
   "scripts": {
     "start": "node index.js",
-    "test": "node build/test.js"
+    "test": "node build/test.js",
+    "eslint": "eslint **/*.js"
   },
-  "version": "5.1.0",
+  "version": "5.2.0",
   "devDependencies": {
-    "eslint": "^5.16.0",
-    "eslint-config-airbnb-base": "^13.2.0",
-    "eslint-plugin-import": "^2.20.2"
+    "eslint": "^7.10.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.1"
   }
 }

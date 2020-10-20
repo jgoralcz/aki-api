@@ -1,4 +1,4 @@
-const rp = require('request-promise');
+const axios = require('axios');
 
 /**
  * gets the server automatically, so we don't rely on hard coded values.
@@ -11,14 +11,14 @@ const getServer = async (region) => {
     const [language, themeName] = split;
 
     const url = `https://${language}.akinator.com`;
-    const page = await rp.get(url);
+    const { data } = await axios.get(url);
 
     const regex = /\[{"translated_theme_name":"[\s\S]*","urlWs":"https:\\\/\\\/srv[0-9]+\.akinator\.com:[0-9]+\\\/ws","subject_id":"[0-9]+"}]/gim;
-    const parsed = JSON.parse(page.match(regex));
+    const parsed = JSON.parse(data.match(regex));
 
     if (!parsed || !parsed[0] || !parsed[0].urlWs || parsed.length <= 0) return undefined;
 
-    const found = parsed.find(theme => theme.translated_theme_name.toLowerCase() === themeName);
+    const found = parsed.find((theme) => theme.translated_theme_name.toLowerCase() === themeName);
 
     const obj = {
       url,
@@ -31,7 +31,6 @@ const getServer = async (region) => {
   }
   return undefined;
 };
-
 
 /**
  * Returns the id from the correct region.
@@ -136,6 +135,10 @@ const regionURL = async (akinatorRegion) => {
     case 'tr':
     case 'turkish':
       return getServer('tr');
+
+    case 'id':
+    case 'indonesia':
+      return getServer('id');
 
     default:
       return region ? getServer(region) : getServer('en');

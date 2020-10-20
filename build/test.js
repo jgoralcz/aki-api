@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+/* eslint-disable */
 const { Aki, regions } = require('../index');
 
 const testGame = async (region, childMode) => {

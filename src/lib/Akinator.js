@@ -1,8 +1,8 @@
-const request = require('../lib/functions/Request');
-const getURL = require('../lib/functions/GetURL');
-const { jQuery } = require('../lib/constants/Client');
+const request = require('./functions/Request');
+const getURL = require('./functions/GetURL');
+const { jQuery } = require('./constants/Client');
 const akinatorAPIErrors = require('../errors/AkinatorAPIErrors');
-const getSession = require('../lib/functions/GetSession');
+const getSession = require('./functions/GetSession');
 
 module.exports = class Akinator {
   constructor(region, childMode) {
@@ -37,19 +37,18 @@ module.exports = class Akinator {
     this.uid = this.uriObj.uid;
     this.frontaddr = this.uriObj.frontaddr;
 
-    const result = await request(`${this.uri}/new_session?callback=${jQuery + new Date().getTime()}&urlApiWs=${this.urlApiWs}&partner=1&childMod=${this.childMode.childMod}&player=website-desktop&uid_ext_session=${this.uid}&frontaddr=${this.frontaddr}&constraint=ETAT<>'AV'&soft_constraint=${this.childMode.softConstraint}&question_filter=${this.childMode.questionFilter}`);
-    const { body, statusCode } = result;
+    const { data, status } = await request(`${this.uri}/new_session?callback=${jQuery + new Date().getTime()}&urlApiWs=${this.urlApiWs}&partner=1&childMod=${this.childMode.childMod}&player=website-desktop&uid_ext_session=${this.uid}&frontaddr=${this.frontaddr}&constraint=ETAT<>'AV'&soft_constraint=${this.childMode.softConstraint}&question_filter=${this.childMode.questionFilter}`);
 
-    if (!statusCode || statusCode !== 200 || !body || body.completion !== 'OK' || !body.parameters || !body.parameters.step_information.question) {
-      akinatorAPIErrors(body, this.region);
+    if (!status || status !== 200 || !data || data.completion !== 'OK' || !data.parameters || !data.parameters.step_information.question) {
+      akinatorAPIErrors(data, this.region);
       return;
     }
 
-    this.session = body.parameters.identification.session;
-    this.signature = body.parameters.identification.signature;
-    this.question = body.parameters.step_information.question;
-    this.challenge_auth = body.parameters.identification.challenge_auth;
-    this.answers = body.parameters.step_information.answers.map(ans => ans.answer);
+    this.session = data.parameters.identification.session;
+    this.signature = data.parameters.identification.signature;
+    this.question = data.parameters.step_information.question;
+    this.challenge_auth = data.parameters.identification.challenge_auth;
+    this.answers = data.parameters.step_information.answers.map((ans) => ans.answer);
   }
 
   /**
@@ -60,18 +59,17 @@ module.exports = class Akinator {
     if (!this.uri || !this.urlApiWs) throw new Error(this.noUri);
     if (!this.uriObj) throw new Error(this.noSession);
 
-    const result = await request(`${this.uri}/answer_api?callback=${jQuery + new Date().getTime()}&urlApiWs=${this.urlApiWs}&childMod=${this.childMode.childMod}&session=${this.session}&signature=${this.signature}&step=${this.currentStep}&answer=${answerId}&frontaddr=${this.frontaddr}&question_filter=${this.childMode.questionFilter}`);
-    const { body, statusCode } = result;
+    const { data, status } = await request(`${this.uri}/answer_api?callback=${jQuery + new Date().getTime()}&urlApiWs=${this.urlApiWs}&childMod=${this.childMode.childMod}&session=${this.session}&signature=${this.signature}&step=${this.currentStep}&answer=${answerId}&frontaddr=${this.frontaddr}&question_filter=${this.childMode.questionFilter}`);
 
-    if (!statusCode || statusCode !== 200 || !body || body.completion !== 'OK' || !body.parameters || !body.parameters.question) {
-      akinatorAPIErrors(body, this.region);
+    if (!status || status !== 200 || !data || data.completion !== 'OK' || !data.parameters || !data.parameters.question) {
+      akinatorAPIErrors(data, this.region);
       return;
     }
 
-    this.currentStep = this.currentStep + 1;
-    this.progress = body.parameters.progression;
-    this.question = body.parameters.question;
-    this.answers = body.parameters.answers.map(ans => ans.answer);
+    this.currentStep += 1;
+    this.progress = data.parameters.progression;
+    this.question = data.parameters.question;
+    this.answers = data.parameters.answers.map((ans) => ans.answer);
   }
 
   /**
@@ -81,18 +79,17 @@ module.exports = class Akinator {
     if (!this.uri || !this.urlApiWs) throw new Error(this.noUri);
     if (!this.uriObj) throw new Error(this.noSession);
 
-    const result = await request(`${this.urlApiWs}/cancel_answer?&callback=${jQuery + new Date().getTime()}&session=${this.session}&childMod=${this.childMode.childMod}&signature=${this.signature}&step=${this.currentStep}&answer=-1&question_filter=${this.childMode.questionFilter}`);
-    const { body, statusCode } = result;
+    const { data, status } = await request(`${this.urlApiWs}/cancel_answer?&callback=${jQuery + new Date().getTime()}&session=${this.session}&childMod=${this.childMode.childMod}&signature=${this.signature}&step=${this.currentStep}&answer=-1&question_filter=${this.childMode.questionFilter}`);
 
-    if (!statusCode || statusCode !== 200 || !body || body.completion !== 'OK' || !body.parameters || !body.parameters.question) {
-      akinatorAPIErrors(body, this.region);
+    if (!status || status !== 200 || !data || data.completion !== 'OK' || !data.parameters || !data.parameters.question) {
+      akinatorAPIErrors(data, this.region);
       return;
     }
 
-    this.currentStep = this.currentStep - 1;
-    this.progress = body.parameters.progression;
-    this.question = body.parameters.question;
-    this.answers = body.parameters.answers.map(ans => ans.answer);
+    this.currentStep -= 1;
+    this.progress = data.parameters.progression;
+    this.question = data.parameters.question;
+    this.answers = data.parameters.answers.map((ans) => ans.answer);
   }
 
   /**
@@ -102,19 +99,18 @@ module.exports = class Akinator {
     if (!this.uri || !this.urlApiWs) throw new Error(this.noUri);
     if (!this.uriObj) throw new Error(this.noSession);
 
-    const result = await request(`${this.urlApiWs}/list?callback=${jQuery + new Date().getTime()}&signature=${this.signature}${this.childMode === true ? `&childMod=${this.childMode}` : ''}&step=${this.currentStep}&session=${this.session}`);
-    const { body, statusCode } = result;
+    const { data, status } = await request(`${this.urlApiWs}/list?callback=${jQuery + new Date().getTime()}&signature=${this.signature}${this.childMode === true ? `&childMod=${this.childMode}` : ''}&step=${this.currentStep}&session=${this.session}`);
 
-    if (!statusCode || statusCode !== 200 || !body || body.completion !== 'OK' || !body.parameters || !body.parameters.elements) {
-      akinatorAPIErrors(body, this.region);
+    if (!status || status !== 200 || !data || data.completion !== 'OK' || !data.parameters || !data.parameters.elements) {
+      akinatorAPIErrors(data, this.region);
       return;
     }
 
-    this.answers = (body.parameters.elements || []).map(ele => ele.element);
+    this.answers = (data.parameters.elements || []).map((ele) => ele.element);
     for (let i = 0; i < this.answers.length; i += 1) {
       this.answers[i].nsfw = ['x', 'pornstar'].includes((this.answers[i].pseudo || '').toLowerCase());
     }
 
-    this.guessCount = body.parameters.NbObjetsPertinents;
+    this.guessCount = data.parameters.NbObjetsPertinents;
   }
 };

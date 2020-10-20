@@ -1,15 +1,9 @@
 # aki-api (Akinator)
-[![CircleCI](https://circleci.com/gh/jgoralcz/aki-api/tree/master.svg?style=svg)](https://circleci.com/gh/jgoralcz/aki-api/tree/master)
 [![npm version](https://badge.fury.io/js/aki-api.svg)](https://www.npmjs.com/package/aki-api)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Actions Status](https://github.com/jgoralcz/aki-api/workflows/unittest/badge.svg)](https://github.com/jgoralcz/aki-api/actions)
 
 An API for Akinator based in NodeJS.
-
-**IMPORTANT:** Version 4 is a functional approach while Version 5 is an object-oriented approach. Please be aware of the differences!
-
-This package contains all the features that you will need to interact with the Akinator API.
-Below you will find information on how to install the package and utilize the package's features.
-This package supports 15 different languages.
 
 ## Requirements
 | Requirement | Version |
@@ -47,7 +41,8 @@ This package supports 15 different languages.
   'pl',
   'pt',
   'ru',
-  'tr'
+  'tr',
+  'id'
 ]
 ```
 
