@@ -17,6 +17,9 @@ const params = Object.freeze({
 const rp = async (uri) => {
   try {
     const result = await axios.get(uri, { headers, params });
+    if (!result || !result.data || !result.data.indexOf) {
+      throw new Error(`Akinator could not fulfill the request in time for uri ${uri}. There is no data.`)
+    }
     const beginningParse = result.data.indexOf('(');
     const jsonString = result.data.substring(beginningParse + 1, result.data.length - 1);
     result.data = JSON.parse(jsonString);
