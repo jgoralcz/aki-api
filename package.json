@@ -45,7 +45,7 @@
     "url": "https://github.com/jgoralcz/aki-api/issues"
   },
   "dependencies": {
-    "axios": "^0.20.0"
+    "axios": "^0.21.1"
   },
   "description": "An API for Akinator.  Supports up to 15 languages and has two English servers.",
   "homepage": "https://github.com/jgoralcz/aki-api#readme",
