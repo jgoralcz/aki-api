@@ -20,7 +20,7 @@ module.exports = class Akinator {
       questionFilter: childMode === true ? 'cat%3D1' : '',
     };
 
-    this.queston = '';
+    this.question = '';
     this.answers = [];
   }
 
@@ -37,7 +37,8 @@ module.exports = class Akinator {
     this.uid = this.uriObj.uid;
     this.frontaddr = this.uriObj.frontaddr;
 
-    const { data, status } = await request(`${this.uri}/new_session?callback=${jQuery + new Date().getTime()}&urlApiWs=${this.urlApiWs}&partner=1&childMod=${this.childMode.childMod}&player=website-desktop&uid_ext_session=${this.uid}&frontaddr=${this.frontaddr}&constraint=ETAT<>'AV'&soft_constraint=${this.childMode.softConstraint}&question_filter=${this.childMode.questionFilter}`);
+    const { data, status } = await request(`${this.uri}/new_session?callback=${jQuery + new Date().getTime()}&urlApiWs=${this.urlApiWs}&partner=1&childMod=${this.childMode.childMod}&player=website-desktop&uid_ext_session=${this.uid}&frontaddr=${this.frontaddr}&constraint=ETAT<>'AV'&soft_constraint=${this.childMode.softConstraint}&
+_filter=${this.childMode.questionFilter}`);
 
     if (!status || status !== 200 || !data || data.completion !== 'OK' || !data.parameters || !data.parameters.step_information.question) {
       akinatorAPIErrors(data, this.region);
