@@ -56,10 +56,13 @@ const region = 'en';
 
 const aki = new Aki(region);
 
-await aki.start();
+async function run() {
+    await aki.start();
+    console.log('question:', aki.question);
+    console.log('answers: ', aki.answers);
+}
 
-console.log('question:', aki.question);
-console.log('answers: ', aki.answers);
+run();
 ```
 
 ### Output from above console.log
@@ -90,15 +93,20 @@ const { Aki } = require('aki-api');
 const region = 'en';
 const aki = new Aki(region);
 
-await aki.start();
+async function run() {
 
-const myAnswer = 0; // yes = 0
+    await aki.start();
 
-await aki.step(myAnswer);
+    const myAnswer = 0; // yes = 0
+    
+    await aki.step(myAnswer);
 
-console.log('question:', aki.question);
-console.log('answers:', aki.answers);
-console.log('progress:', aki.progress);
+    console.log('question:', aki.question);
+    console.log('answers:', aki.answers);
+    console.log('progress:', aki.progress);
+}
+
+run();
 ```
 
 ### Win/Show the akinator's guess
@@ -110,17 +118,21 @@ const { Aki } = require('aki-api');
 const region = 'en';
 const aki = new Aki(region);
 
-await aki.start();
+async function run() {
+    await aki.start();
 
-const myAnswer = 0; // yes = 0
+    const myAnswer = 0; // yes = 0
 
-await aki.step(myAnswer);
+    await aki.step(myAnswer);
 
-if (aki.progress >= 70 || aki.currentStep >= 78) {
-  await aki.win();
-  console.log('firstGuess:', aki.answers);
-  console.log('guessCount:', aki.guessCount);
+    if (aki.progress >= 70 || aki.currentStep >= 78) {
+      await aki.win();
+      console.log('firstGuess:', aki.answers);
+      console.log('guessCount:', aki.guessCount);
+    }
 }
+
+run();
 ```
 
 ### Enable child mode
@@ -134,16 +146,18 @@ const region = 'en';
 const childMode = true;
 const aki = new Aki(region, childMode);
 
-await aki.start();
+async function run() {
+    await aki.start();
 
-const myAnswer = 0; // yes = 0
+    const myAnswer = 0; // yes = 0
 
-await aki.step(myAnswer);
+    await aki.step(myAnswer);
 
-if (aki.progress >= 70 || aki.currentStep >= 78) {
-  await aki.win();
-  console.log('firstGuess:', aki.answers);
-  console.log('guessCount:', aki.guessCount);
+    if (aki.progress >= 70 || aki.currentStep >= 78) {
+      await aki.win();
+      console.log('firstGuess:', aki.answers);
+      console.log('guessCount:', aki.guessCount);
+    }
 }
 ```
 
@@ -193,14 +207,18 @@ const { Aki } = require('aki-api');
 const region = 'en';
 const aki = new Aki(region);
 
-await aki.start();
+async function run() {
+    await aki.start();
 
-const myAnswer = 1; // no = 1
+    const myAnswer = 1; // no = 1
 
-await aki.step(myAnswer);
-await aki.back();
+    await aki.step(myAnswer);
+    await aki.back();
 
-console.log('question:', aki.question);
-console.log('answers:', aki.answers);
+    console.log('question:', aki.question);
+    console.log('answers:', aki.answers);
+}
+
+run();
 ```
 
