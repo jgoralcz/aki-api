@@ -6,7 +6,6 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
       - name: Extract Tag
         shell: bash
         run: echo "##[set-output name=tag;]$([ "${GITHUB_REF##*/}" == "master" ] && echo "latest" || echo "beta")"
