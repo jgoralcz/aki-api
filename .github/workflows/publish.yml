@@ -18,7 +18,9 @@ jobs:
           node-version: 14
       - run: npm install
       - run: npm test
-      - tag: ${{ steps.extract_tag.outputs.tag }}
-      - uses: JS-DevTools/npm-publish@v1
-        with:
-          token: ${{ secrets.NPM_TOKEN }}
+      
+      - name: Publish
+        tag: ${{ steps.extract_tag.outputs.tag }}
+        uses: JS-DevTools/npm-publish@v1
+          with:
+            token: ${{ secrets.NPM_TOKEN }}
