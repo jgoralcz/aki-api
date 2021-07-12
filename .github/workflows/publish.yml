@@ -7,7 +7,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Extract Tag
-        uses: actions/checkout@v2
         shell: bash
         run: echo "##[set-output name=tag;]$([ "${GITHUB_REF##*/}" == "master" ] && echo "latest" || echo "beta")"
         id: extract_tag
