@@ -1,6 +1,6 @@
 {
-  "_from": "aki-api@5.0.0",
-  "_id": "aki-api@5.0.0",
+  "_from": "aki-api@6.0.0",
+  "_id": "aki-api@6.0.0",
   "_inBundle": false,
   "_integrity": "sha512-nNt1bOgOI7LunlT12zweWh/Mi2oAHfXKH556+rKbqlFzVgwFDYApYI60R4vJ7uViuEBrjlCc3IC6PUAtTgXmZA==",
   "_location": "/aki-api",
@@ -26,18 +26,18 @@
   "_requested": {
     "type": "version",
     "registry": true,
-    "raw": "aki-api@5.0.0",
+    "raw": "aki-api@6.0.0",
     "name": "aki-api",
     "escapedName": "aki-api",
-    "rawSpec": "5.0.0",
+    "rawSpec": "6.0.0",
     "saveSpec": null,
-    "fetchSpec": "5.0.0"
+    "fetchSpec": "6.0.0"
   },
   "_requiredBy": [
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/aki-api/-/aki-api-5.0.0.tgz",
-  "_spec": "5.0.0",
+  "_resolved": "https://registry.npmjs.org/aki-api/-/aki-api-6.0.0.tgz",
+  "_spec": "6.0.0",
   "author": {
     "name": "Joshua Goralczyk"
   },
@@ -45,7 +45,8 @@
     "url": "https://github.com/jgoralcz/aki-api/issues"
   },
   "dependencies": {
-    "axios": "^0.21.1"
+    "axios": "^0.21.1",
+    "https-proxy-agent": "^5.0.0"
   },
   "description": "An API for Akinator.  Supports up to 15 languages and has two English servers.",
   "homepage": "https://github.com/jgoralcz/aki-api#readme",
@@ -68,14 +69,16 @@
     "url": "git+https://github.com/jgoralcz/aki-api.git"
   },
   "scripts": {
-    "start": "node index.js",
-    "test": "node build/test.js",
-    "eslint": "eslint **/*.js"
+    "start": "npx ts-node src/",
+    "eslint": "eslint **/*.ts",
+    "build": "tsc",
+    "test": "npx ts-node tests/"
   },
-  "version": "5.2.1",
+  "version": "6.0.0",
   "devDependencies": {
+    "@types/node": "^16.3.1",
     "eslint": "^7.10.0",
-    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1"
   }
 }

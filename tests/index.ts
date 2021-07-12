@@ -1,8 +1,11 @@
 /* eslint-disable */
-const { Aki, regions } = require('../index');
+import { Aki, regions, region } from '..';
 
-const testGame = async (region, childMode) => {
-  const aki = new Aki(region);
+const rNumber = [0, 1, 2, 3, 4] as const;
+type randomNumber = (typeof rNumber)[number];
+
+const testGame = async (region: region, childMode?: boolean) => {
+  const aki = new Aki({ region });
 
   await aki.start();
   console.log(`${region} ${childMode} - start: ${aki.question} ${aki.progress}`);
@@ -14,7 +17,8 @@ const testGame = async (region, childMode) => {
   console.log(`${region} ${childMode} - back: ${aki.currentStep} ${aki.question} ${aki.progress}`);
 
   while (aki.progress <= 50 && aki.currentStep < 15) {
-    await aki.step(Math.floor(Math.random() * 2));
+    const randomNumber = (Math.floor(Math.random() * 2)) as randomNumber;
+    await aki.step(randomNumber);
     console.log(`${region} ${childMode} - step: ${aki.currentStep} ${aki.question} ${aki.progress}`);
 
     if (Math.floor(Math.random() * 10) < 1 && aki.currentStep > 1) {
@@ -25,13 +29,16 @@ const testGame = async (region, childMode) => {
 
 
   await aki.win();
-  console.log('win:', aki.question);
+  console.log('win:', aki.question, aki.answers);
 };
 
 (async () => {
   console.log('Starting tests...');
 
-  const selectedRegion = process.argv.length > 2 ? process.argv.slice(2)[0] : 'all';
+  let selectedRegion = (process.argv.length > 2 ? process.argv.slice(2)[0] : 'all') as any;
+  if (!regions.includes(selectedRegion) && selectedRegion !== 'all') {
+    selectedRegion = 'all';
+  }
 
   // "npm test -- all" or just "npm test". Test all servers
   if (selectedRegion === 'all') {
