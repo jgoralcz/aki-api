@@ -1,17 +1,25 @@
 name: publish
 on:
   push:
-    branches: [master]
+    branches: [master, develop]
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+      - name: Extract Tag
+        shell: bash
+        run: echo "##[set-output name=tag;]$([ "${GITHUB_REF##*/}" == "master" ] && echo "latest" || echo "beta")"
+        id: extract_tag
+    
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
         with:
           node-version: 14
+      - run: npm run eslint
       - run: npm install
       - run: npm test
+      - tag: ${{ steps.extract_tag.outputs.tag }}
       - uses: JS-DevTools/npm-publish@v1
         with:
           token: ${{ secrets.NPM_TOKEN }}

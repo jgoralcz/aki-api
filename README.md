@@ -53,8 +53,10 @@ An API for Akinator based in NodeJS.
 const { Aki } = require('aki-api');
 
 const region = 'en';
+const childMode = false;
+const proxy = undefined;
 
-const aki = new Aki(region);
+const aki = new Aki({ region, childMode, proxy });
 
 const run = async () => {
     await aki.start();
@@ -91,7 +93,7 @@ answers: [
 const { Aki } = require('aki-api');
 
 const region = 'en';
-const aki = new Aki(region);
+const aki = new Aki({ region });
 
 const run = async () => {
 
@@ -116,7 +118,7 @@ run().catch(console.error);
 const { Aki } = require('aki-api');
 
 const region = 'en';
-const aki = new Aki(region);
+const aki = new Aki({ region });
 
 const run = async () => {
     await aki.start();
@@ -144,7 +146,7 @@ const { Aki } = require('aki-api');
 
 const region = 'en';
 const childMode = true;
-const aki = new Aki(region, childMode);
+const aki = new Aki({ region, childMode });
 
 const run = async () => {
     await aki.start();
@@ -207,7 +209,7 @@ guessCount: 2
 const { Aki } = require('aki-api');
 
 const region = 'en';
-const aki = new Aki(region);
+const aki = new Aki({ region });
 
 const run = async () => {
     await aki.start();
