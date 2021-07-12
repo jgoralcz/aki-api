@@ -22,5 +22,5 @@ jobs:
       - name: Publish
         tag: ${{ steps.extract_tag.outputs.tag }}
         uses: JS-DevTools/npm-publish@v1
-          with:
-            token: ${{ secrets.NPM_TOKEN }}
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
