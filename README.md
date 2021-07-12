@@ -58,10 +58,13 @@ const proxy = undefined;
 
 const aki = new Aki({ region, childMode, proxy });
 
-await aki.start();
+const run = async () => {
+    await aki.start();
+    console.log('question:', aki.question);
+    console.log('answers: ', aki.answers);
+}
 
-console.log('question:', aki.question);
-console.log('answers: ', aki.answers);
+run().catch(console.error);
 ```
 
 ### Output from above console.log
@@ -92,15 +95,20 @@ const { Aki } = require('aki-api');
 const region = 'en';
 const aki = new Aki({ region });
 
-await aki.start();
+const run = async () => {
 
-const myAnswer = 0; // yes = 0
+    await aki.start();
 
-await aki.step(myAnswer);
+    const myAnswer = 0; // yes = 0
+    
+    await aki.step(myAnswer);
 
-console.log('question:', aki.question);
-console.log('answers:', aki.answers);
-console.log('progress:', aki.progress);
+    console.log('question:', aki.question);
+    console.log('answers:', aki.answers);
+    console.log('progress:', aki.progress);
+}
+
+run().catch(console.error);
 ```
 
 ### Win/Show the akinator's guess
@@ -112,21 +120,25 @@ const { Aki } = require('aki-api');
 const region = 'en';
 const aki = new Aki({ region });
 
-await aki.start();
+const run = async () => {
+    await aki.start();
 
-const myAnswer = 0; // yes = 0
+    const myAnswer = 0; // yes = 0
 
-await aki.step(myAnswer);
+    await aki.step(myAnswer);
 
-if (aki.progress >= 70 || aki.currentStep >= 78) {
-  await aki.win();
-  console.log('firstGuess:', aki.answers);
-  console.log('guessCount:', aki.guessCount);
+    if (aki.progress >= 70 || aki.currentStep >= 78) {
+      await aki.win();
+      console.log('firstGuess:', aki.answers);
+      console.log('guessCount:', aki.guessCount);
+    }
 }
+
+run().catch(console.error);
 ```
 
 ### Enable child mode
-#### Simply pass in true or false for childMode property in the constructor.
+#### Simply pass in true or false for the 2nd parameter in the constructor.
 The child mode prevents showing explicit questions. However, the results (from `aki.win()`) will still contain characters that do contain NSFW (non-child mode content). To check if the images contain NSFW content, you need to check for a property called nsfw which will be true or false (this can be inaccurate to some degree) or filter by the property `pseudo`. The `pseudo` property is a string that marks NSFW content with an `'X'` or other NSFW term to describe the character. When child mode is enabled on the site and a NSFW character is guessed, Akinator says, "I know who you are thinking of, but I believe this is not for young people".
 
 ```js
@@ -136,17 +148,21 @@ const region = 'en';
 const childMode = true;
 const aki = new Aki({ region, childMode });
 
-await aki.start();
+const run = async () => {
+    await aki.start();
 
-const myAnswer = 0; // yes = 0
+    const myAnswer = 0; // yes = 0
 
-await aki.step(myAnswer);
+    await aki.step(myAnswer);
 
-if (aki.progress >= 70 || aki.currentStep >= 78) {
-  await aki.win();
-  console.log('firstGuess:', aki.answers);
-  console.log('guessCount:', aki.guessCount);
+    if (aki.progress >= 70 || aki.currentStep >= 78) {
+      await aki.win();
+      console.log('firstGuess:', aki.answers);
+      console.log('guessCount:', aki.guessCount);
+    }
 }
+
+run().catch(console.error);
 ```
 
 ### Output from above console.log
@@ -195,14 +211,18 @@ const { Aki } = require('aki-api');
 const region = 'en';
 const aki = new Aki({ region });
 
-await aki.start();
+const run = async () => {
+    await aki.start();
 
-const myAnswer = 1; // no = 1
+    const myAnswer = 1; // no = 1
 
-await aki.step(myAnswer);
-await aki.back();
+    await aki.step(myAnswer);
+    await aki.back();
 
-console.log('question:', aki.question);
-console.log('answers:', aki.answers);
+    console.log('question:', aki.question);
+    console.log('answers:', aki.answers);
+}
+
+run().catch(console.error);
 ```
 
