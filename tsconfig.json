@@ -14,7 +14,7 @@
     "outDir": "./dist/",
     "declarationDir": "./typings/",
     "resolveJsonModule": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
   },
   "include": [
     "./src/",

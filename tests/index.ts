@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { Aki, regions, region } from '..';
+import { Aki, regions, region } from '../src/lib';
 
 const rNumber = [0, 1, 2, 3, 4] as const;
 type randomNumber = (typeof rNumber)[number];
