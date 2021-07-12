@@ -60,7 +60,7 @@ export default class Akinator {
   /**
   * Starts the akinator session and game.
   */
-  async start() {
+  async start(): Promise<void | Error> {
     const server = await regionURL(this.region);
     if (!server) throw new Error(`Could not find a server matching the region ${this.region}`);
 
@@ -94,7 +94,7 @@ export default class Akinator {
    * Gets the next question for the akinator session.
    * @param {answerID} answerID the answer to the question
    */
-  async step(answerID: answerID) {
+  async step(answerID: answerID): Promise<void | Error> {
     if (!this.uri || !this.urlApiWs) throw new Error(this.noUri);
     if (!this.uriObj) throw new Error(this.noSession);
 
@@ -116,7 +116,7 @@ export default class Akinator {
   /**
    * Reverts the game back a previous step.
    */
-  async back() {
+  async back(): Promise<void | Error> {
     if (!this.uri || !this.urlApiWs) throw new Error(this.noUri);
     if (!this.uriObj) throw new Error(this.noSession);
 
@@ -138,7 +138,7 @@ export default class Akinator {
   /**
    * The akinator attempts to make a guess and win the game.
    */
-  async win() {
+  async win(): Promise<void | Error> {
     if (!this.uri || !this.urlApiWs) throw new Error(this.noUri);
     if (!this.uriObj) throw new Error(this.noSession);
 
@@ -158,4 +158,4 @@ export default class Akinator {
       this.guessCount = parseInt(parameters.NbObjetsPertinents, 10);
     }
   }
-};
+}

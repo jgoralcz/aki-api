@@ -32,14 +32,14 @@
   },
   "scripts": {
     "start": "npx ts-node src/",
-    "eslint": "eslint **/*.ts",
+    "eslint": "eslint . --ext .ts",
     "build": "tsc",
     "test": "npx ts-node tests/"
   },
   "devDependencies": {
     "@types/node": "^16.3.1",
-    "eslint": "^7.10.0",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-plugin-import": "^2.22.1"
+    "@typescript-eslint/eslint-plugin": "^4.28.2",
+    "@typescript-eslint/parser": "^4.28.2",
+    "eslint": "^7.30.0"
   }
 }

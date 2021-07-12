@@ -32,4 +32,4 @@ export async function getSession(config?: AxiosRequestConfig): Promise<{ uid: st
   }
 
   return { uid, frontaddr };
-};
+}

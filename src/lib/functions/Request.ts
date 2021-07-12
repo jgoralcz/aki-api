@@ -64,7 +64,7 @@ export type AkinatorResultParams = {
   // question
   answers: [{ answer: 'Yes' }, { answer: 'No' }, { answer: 'Don\'t Know' }, { answer: 'Probably' }, { answer: 'Probably not' }]
   infogain: string
-  options: any[]
+  options: string[] // not sure
   progression: string
   question: string
   questionid: string
@@ -118,7 +118,7 @@ const getServer = async (region: region): Promise<AkiURL | undefined> => {
 
     if (!parsed || !parsed[0] || !parsed[0].urlWs || parsed.length <= 0) return undefined;
 
-    const found = parsed.find((theme: any) => theme.translated_theme_name.toLowerCase() === themeName);
+    const found = parsed.find((theme: { translated_theme_name: string }) => theme.translated_theme_name.toLowerCase() === themeName);
 
     const obj: AkiURL = {
       url,
