@@ -52,13 +52,12 @@ An API for Akinator based in NodeJS.
 ```js
 const { Aki } = require('aki-api');
 
-const region = 'en';
-const childMode = false;
-const proxy = undefined;
-
-const aki = new Aki({ region, childMode, proxy });
-
 const run = async () => {
+    const region = 'en';
+    const childMode = false;
+    const proxy = undefined;
+
+    const aki = new Aki({ region, childMode, proxy });
     await aki.start();
     console.log('question:', aki.question);
     console.log('answers: ', aki.answers);
@@ -92,11 +91,10 @@ answers: [
 ```js
 const { Aki } = require('aki-api');
 
-const region = 'en';
-const aki = new Aki({ region });
-
 const run = async () => {
-
+    const region = 'en';
+    const aki = new Aki({ region });
+    
     await aki.start();
 
     const myAnswer = 0; // yes = 0
@@ -121,6 +119,9 @@ const region = 'en';
 const aki = new Aki({ region });
 
 const run = async () => {
+    const region = 'en';
+    const aki = new Aki({ region });
+    
     await aki.start();
 
     const myAnswer = 0; // yes = 0
@@ -144,11 +145,11 @@ The child mode prevents showing explicit questions. However, the results (from `
 ```js
 const { Aki } = require('aki-api');
 
-const region = 'en';
-const childMode = true;
-const aki = new Aki({ region, childMode });
-
 const run = async () => {
+    const region = 'en';
+    const childMode = true;
+    const aki = new Aki({ region, childMode });
+    
     await aki.start();
 
     const myAnswer = 0; // yes = 0
@@ -208,10 +209,10 @@ guessCount: 2
 ```js
 const { Aki } = require('aki-api');
 
-const region = 'en';
-const aki = new Aki({ region });
-
 const run = async () => {
+    const region = 'en';
+    const aki = new Aki({ region });
+
     await aki.start();
 
     const myAnswer = 1; // no = 1
