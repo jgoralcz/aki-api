@@ -23,7 +23,6 @@ export default class Akinator {
   session: string | undefined;
   progress: number;
   childMode: { childMod: boolean; softConstraint: string; questionFilter: string; };
-  queston: string;
   answers: ('Yes' | 'No' | 'Don\'t Know' | 'Probably' | 'Probably not')[] | guess[];
   uid: string | undefined;
   frontaddr: string | undefined;
@@ -54,7 +53,7 @@ export default class Akinator {
       }
     }
 
-    this.queston = '';
+    this.question = '';
     this.answers = [];
   }
 
