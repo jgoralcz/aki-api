@@ -1,51 +1,17 @@
 {
-  "_from": "aki-api@5.0.0",
-  "_id": "aki-api@5.0.0",
-  "_inBundle": false,
-  "_integrity": "sha512-nNt1bOgOI7LunlT12zweWh/Mi2oAHfXKH556+rKbqlFzVgwFDYApYI60R4vJ7uViuEBrjlCc3IC6PUAtTgXmZA==",
-  "_location": "/aki-api",
-  "_phantomChildren": {
-    "aws-sign2": "0.7.0",
-    "caseless": "0.12.0",
-    "combined-stream": "1.0.6",
-    "fast-json-stable-stringify": "2.0.0",
-    "forever-agent": "0.6.1",
-    "form-data": "2.3.2",
-    "har-schema": "2.0.0",
-    "http-signature": "1.2.0",
-    "is-typedarray": "1.0.0",
-    "isstream": "0.1.2",
-    "json-stringify-safe": "5.0.1",
-    "performance-now": "2.1.0",
-    "psl": "1.1.29",
-    "punycode": "1.4.1",
-    "qs": "6.5.2",
-    "tunnel-agent": "0.6.0",
-    "uri-js": "4.2.2"
-  },
-  "_requested": {
-    "type": "version",
-    "registry": true,
-    "raw": "aki-api@5.0.0",
-    "name": "aki-api",
-    "escapedName": "aki-api",
-    "rawSpec": "5.0.0",
-    "saveSpec": null,
-    "fetchSpec": "5.0.0"
-  },
-  "_requiredBy": [
-    "/"
-  ],
-  "_resolved": "https://registry.npmjs.org/aki-api/-/aki-api-5.0.0.tgz",
-  "_spec": "5.0.0",
-  "author": {
-    "name": "Joshua Goralczyk"
-  },
+  "author": "Joshua Goralczyk",
+  "version": "6.0.2",
+  "main": "./dist/src/index.js",
+  "types": "typings/src/index.d.ts",
+  "license": "MIT",
+  "name": "aki-api",
   "bugs": {
     "url": "https://github.com/jgoralcz/aki-api/issues"
   },
   "dependencies": {
-    "axios": "^0.21.1"
+    "axios": "^0.21.1",
+    "https-proxy-agent": "^5.0.0",
+    "typescript": "next"
   },
   "description": "An API for Akinator.  Supports up to 15 languages and has two English servers.",
   "homepage": "https://github.com/jgoralcz/aki-api#readme",
@@ -60,22 +26,20 @@
     "discordjs akinator",
     "discordjs-akinator"
   ],
-  "license": "MIT",
-  "main": "index.js",
-  "name": "aki-api",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jgoralcz/aki-api.git"
   },
   "scripts": {
-    "start": "node index.js",
-    "test": "node build/test.js",
-    "eslint": "eslint **/*.js"
+    "start": "npx ts-node src/",
+    "eslint": "eslint . --ext .ts",
+    "build": "tsc",
+    "test": "npx ts-node tests/"
   },
-  "version": "5.2.1",
   "devDependencies": {
-    "eslint": "^7.10.0",
-    "eslint-config-airbnb-base": "^14.2.0",
-    "eslint-plugin-import": "^2.22.1"
+    "@types/node": "^16.3.1",
+    "@typescript-eslint/eslint-plugin": "^4.28.2",
+    "@typescript-eslint/parser": "^4.28.2",
+    "eslint": "^7.30.0"
   }
 }
