@@ -18,6 +18,7 @@ jobs:
           node-version: 14
       - run: npm install
       - run: npm test
+      - run: npm run build
       
       - name: Publish
         uses: JS-DevTools/npm-publish@v1
