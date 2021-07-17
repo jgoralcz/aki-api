@@ -1,6 +1,6 @@
 {
   "author": "Joshua Goralczyk",
-  "version": "6.0.4",
+  "version": "6.0.5",
   "main": "./dist/index.js",
   "types": "typings/index.d.ts",
   "license": "MIT",
