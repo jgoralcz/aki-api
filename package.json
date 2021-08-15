@@ -10,10 +10,9 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
-    "https-proxy-agent": "^5.0.0",
-    "typescript": "next"
+    "https-proxy-agent": "^5.0.0"
   },
-  "description": "An API for Akinator.  Supports up to 15 languages and has two English servers.",
+  "description": "An API for Akinator. Supports up to 15 languages.",
   "homepage": "https://github.com/jgoralcz/aki-api#readme",
   "keywords": [
     "aki",

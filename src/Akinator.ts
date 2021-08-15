@@ -1,6 +1,6 @@
 
 import { request, regionURL, AkinatorAPIError, getSession, guess } from './functions';
-import { jQuery, region } from './constants/Client';
+import { jQuery, region, regions } from './constants/Client';
 import { HttpsProxyAgent, HttpsProxyAgentOptions } from 'https-proxy-agent';
 
 interface AkinatorConstructor {
@@ -32,6 +32,9 @@ export default class Akinator {
   guessCount: number;
   config: { httpsAgent: HttpsProxyAgent | undefined; proxy: boolean; } | undefined;
   constructor({ region, childMode, proxyOptions }: AkinatorConstructor) {
+    if (!region || !regions.includes(region)) {
+      throw new Error('Please specify a correct region. You can import regions I support or view docs. Then use it like so: \`new Aki({ region })\`');
+    }
     this.currentStep = 0;
     this.region = region;
     this.uri = undefined;
@@ -45,7 +48,7 @@ export default class Akinator {
       softConstraint: childMode === true ? 'ETAT%3D%27EN%27' : '',
       questionFilter: childMode === true ? 'cat%3D1' : '',
     };
-
+  
     if (proxyOptions) {
       this.config = {
         httpsAgent: new HttpsProxyAgent(proxyOptions),
