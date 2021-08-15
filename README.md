@@ -115,9 +115,6 @@ run().catch(console.error);
 ```js
 const { Aki } = require('aki-api');
 
-const region = 'en';
-const aki = new Aki({ region });
-
 const run = async () => {
     const region = 'en';
     const aki = new Aki({ region });

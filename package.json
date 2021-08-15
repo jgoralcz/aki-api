@@ -1,6 +1,6 @@
 {
   "author": "Joshua Goralczyk",
-  "version": "6.0.5",
+  "version": "6.0.6",
   "main": "./dist/index.js",
   "types": "typings/index.d.ts",
   "license": "MIT",
@@ -10,10 +10,9 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
-    "https-proxy-agent": "^5.0.0",
-    "typescript": "next"
+    "https-proxy-agent": "^5.0.0"
   },
-  "description": "An API for Akinator.  Supports up to 15 languages and has two English servers.",
+  "description": "An API for Akinator. Supports up to 15 languages.",
   "homepage": "https://github.com/jgoralcz/aki-api#readme",
   "keywords": [
     "aki",
@@ -40,6 +39,8 @@
     "@types/node": "^16.3.1",
     "@typescript-eslint/eslint-plugin": "^4.28.2",
     "@typescript-eslint/parser": "^4.28.2",
-    "eslint": "^7.30.0"
+    "eslint": "^7.30.0",
+    "ts-node": "^10.2.0",
+    "typescript": "^4.3.5"
   }
 }
