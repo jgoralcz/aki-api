@@ -33,7 +33,7 @@ export default class Akinator {
   config: { httpsAgent: HttpsProxyAgent | undefined; proxy: boolean; } | undefined;
   constructor({ region, childMode, proxyOptions }: AkinatorConstructor) {
     if (!region || !regions.includes(region)) {
-      throw new Error('Please specify a correct region. You can import regions I support or view docs. Then use it like so: \`new Aki({ region })\`');
+      throw new Error('Please specify a correct region. You can import regions I support or view docs. Then use it like so: new Aki({ region })');
     }
     this.currentStep = 0;
     this.region = region;
