@@ -1,0 +1,11 @@
+/src/
+/test/
+/dist/test/
+/node_modules/
+/.vscode/
+/.github/
+/.env
+/tsconfig.json
+/gulpfile.js
+/webpack.config.js
+*.map
