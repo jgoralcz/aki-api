@@ -1,6 +1,6 @@
 /src/
-/test/
-/dist/test/
+/tests/
+/dist/tests/
 /node_modules/
 /.vscode/
 /.github/
