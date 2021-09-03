@@ -1,4 +1,5 @@
-import axios from 'axios';
+import axios, { AxiosProxyConfig, AxiosRequestConfig } from 'axios';
+import { HttpsProxyAgent } from 'https-proxy-agent';
 import { issues, region } from '../constants/Client';
 
 interface AkinatorHeaders {
@@ -159,9 +160,16 @@ export class AkinatorAPIError extends Error {
   }
 }
 
+export type configOptions = {
+  httpsAgent: HttpsProxyAgent | undefined;
+  proxy: boolean;
+} | undefined;
+
 // example output: jQuery331023608747682107778_1615444627875({"completion":"OK","parameters":{"identification":{"channel":0,"session":"459","signature":"223731835","challenge_auth":"8ebe521c-5991-4625-b081-6066352649e5"},"step_information":{"question":"Does your character really exist?","answers":[{"answer":"Yes"},{"answer":"No"},{"answer":"Don't know"},{"answer":"Probably"},{"answer":"Probably not"}],"step":"0","progression":"0.00000","questionid":"266","infogain":"0.607602"}}}
-export const request = async (url: string, checkParamProperty: checkParamProperty, region: region): Promise<AkinatorAPIError | AkinatorResult> => {
-  const { status, data } = await axios.get<number, AkinatorPromise>(url, { headers, params });
+export const request = async (url: string, checkParamProperty: checkParamProperty, region: region, config: configOptions): Promise<AkinatorAPIError | AkinatorResult> => {
+  const axiosConfig = (config || {}) as AxiosRequestConfig;
+  
+  const { status, data } = await axios.get<number, AkinatorPromise>(url, { headers, params, ...axiosConfig });
 
   if (status !== 200 || !data) {
     throw new Error(`A problem occurred with making the request. status: ${status}`);

@@ -2,6 +2,7 @@
 import { request, regionURL, AkinatorAPIError, getSession, guess } from './functions';
 import { jQuery, region, regions } from './constants/Client';
 import { HttpsProxyAgent, HttpsProxyAgentOptions } from 'https-proxy-agent';
+import { configOptions } from './functions/Request';
 
 interface AkinatorConstructor {
   region: region
@@ -30,7 +31,7 @@ export default class Akinator {
   question: string | undefined;
   challenge_auth: string | undefined;
   guessCount: number;
-  config: { httpsAgent: HttpsProxyAgent | undefined; proxy: boolean; } | undefined;
+  config: configOptions;
   constructor({ region, childMode, proxyOptions }: AkinatorConstructor) {
     if (!region || !regions.includes(region)) {
       throw new Error('Please specify a correct region. You can import regions I support or view docs. Then use it like so: new Aki({ region })');
@@ -77,7 +78,8 @@ export default class Akinator {
     this.uid = this.uriObj.uid;
     this.frontaddr = this.uriObj.frontaddr;
 
-    const result = await request(`${this.uri}/new_session?callback=${jQuery + new Date().getTime()}&urlApiWs=${this.urlApiWs}&partner=1&childMod=${this.childMode.childMod}&player=website-desktop&uid_ext_session=${this.uid}&frontaddr=${this.frontaddr}&constraint=ETAT<>'AV'&soft_constraint=${this.childMode.softConstraint}&question_filter=${this.childMode.questionFilter}`, 'identification', this.region);
+    const url = `${this.uri}/new_session?callback=${jQuery + new Date().getTime()}&urlApiWs=${this.urlApiWs}&partner=1&childMod=${this.childMode.childMod}&player=website-desktop&uid_ext_session=${this.uid}&frontaddr=${this.frontaddr}&constraint=ETAT<>'AV'&soft_constraint=${this.childMode.softConstraint}&question_filter=${this.childMode.questionFilter}`;
+    const result = await request(url, 'identification', this.region, this.config);
     if (result instanceof AkinatorAPIError) {
       throw result;
     }
@@ -101,7 +103,8 @@ export default class Akinator {
     if (!this.uri || !this.urlApiWs) throw new Error(this.noUri);
     if (!this.uriObj) throw new Error(this.noSession);
 
-    const result = await request(`${this.uri}/answer_api?callback=${jQuery + new Date().getTime()}&urlApiWs=${this.urlApiWs}&childMod=${this.childMode.childMod}&session=${this.session}&signature=${this.signature}&step=${this.currentStep}&answer=${answerID}&frontaddr=${this.frontaddr}&question_filter=${this.childMode.questionFilter}`, 'answers', this.region);
+    const url = `${this.uri}/answer_api?callback=${jQuery + new Date().getTime()}&urlApiWs=${this.urlApiWs}&childMod=${this.childMode.childMod}&session=${this.session}&signature=${this.signature}&step=${this.currentStep}&answer=${answerID}&frontaddr=${this.frontaddr}&question_filter=${this.childMode.questionFilter}`;
+    const result = await request(url, 'answers', this.region, this.config);
     if (result instanceof AkinatorAPIError) {
       throw result;
     }
@@ -123,7 +126,8 @@ export default class Akinator {
     if (!this.uri || !this.urlApiWs) throw new Error(this.noUri);
     if (!this.uriObj) throw new Error(this.noSession);
 
-    const result = await request(`${this.urlApiWs}/cancel_answer?&callback=${jQuery + new Date().getTime()}&session=${this.session}&childMod=${this.childMode.childMod}&signature=${this.signature}&step=${this.currentStep}&answer=-1&question_filter=${this.childMode.questionFilter}`, 'answers', this.region);
+    const url = `${this.urlApiWs}/cancel_answer?&callback=${jQuery + new Date().getTime()}&session=${this.session}&childMod=${this.childMode.childMod}&signature=${this.signature}&step=${this.currentStep}&answer=-1&question_filter=${this.childMode.questionFilter}`;
+    const result = await request(url, 'answers', this.region, this.config);
     if (result instanceof AkinatorAPIError) {
       throw result;
     }
@@ -145,7 +149,8 @@ export default class Akinator {
     if (!this.uri || !this.urlApiWs) throw new Error(this.noUri);
     if (!this.uriObj) throw new Error(this.noSession);
 
-    const result = await request(`${this.urlApiWs}/list?callback=${jQuery + new Date().getTime()}&signature=${this.signature}${this.childMode.childMod === true ? `&childMod=${this.childMode.childMod}` : ''}&step=${this.currentStep}&session=${this.session}`, 'elements', this.region);
+    const url = `${this.urlApiWs}/list?callback=${jQuery + new Date().getTime()}&signature=${this.signature}${this.childMode.childMod === true ? `&childMod=${this.childMode.childMod}` : ''}&step=${this.currentStep}&session=${this.session}`;
+    const result = await request(url, 'elements', this.region, this.config);
     if (result instanceof AkinatorAPIError) {
       throw result;
     }
