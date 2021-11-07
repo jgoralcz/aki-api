@@ -88,6 +88,7 @@ interface AkinatorSubjects {
   characters: number,
   Objects: number,
   Animals: number
+  [key: string]: number;
 }
 
 type checkParamProperty = 'elements' | 'answers' | 'identification';
@@ -106,7 +107,6 @@ const headers: AkinatorHeaders = {
   'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) snap Chromium/81.0.4044.92 Chrome/81.0.4044.92 Safari/537.36',
   'x-requested-with': 'XMLHttpRequest',
 };
-
 const subject_ids : AkinatorSubjects = {
   characters: 1,
   Objects: 2,
@@ -137,7 +137,6 @@ const getServer = async (region: region): Promise<AkiURL | undefined> => {
 
     if (!parsed || !parsed[0] || !parsed[0].urlWs || parsed.length <= 0) return undefined;
 
-    // @ts-ignore
     const _themeName : keyof AkinatorSubjects = themeName ? themeName.replace(themeName.charAt(0), themeName.charAt(0).toUpperCase()) : 'characters';
 
     const subjectId = subject_ids[_themeName];
