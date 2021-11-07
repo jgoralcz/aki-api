@@ -78,6 +78,18 @@ interface AkinatorResult {
   parameters: AkinatorResultParams
 }
 
+interface AkinatorThemesToPlay {
+  translated_theme_name: string;
+  urlWs: string;
+  subject_id: string;
+}
+
+interface AkinatorSubjects {
+  characters: number,
+  Objects: number,
+  Animals: number
+}
+
 type checkParamProperty = 'elements' | 'answers' | 'identification';
 
 const params: AkinatorParams = Object.freeze({
@@ -94,6 +106,12 @@ const headers: AkinatorHeaders = {
   'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) snap Chromium/81.0.4044.92 Chrome/81.0.4044.92 Safari/537.36',
   'x-requested-with': 'XMLHttpRequest',
 };
+
+const subject_ids : AkinatorSubjects = {
+  characters: 1,
+  Objects: 2,
+  Animals: 14
+}
 
 
 interface AkiURL {
@@ -115,11 +133,16 @@ const getServer = async (region: region): Promise<AkiURL | undefined> => {
     const { data } = await axios.get(url);
 
     const regex = /\[{"translated_theme_name":"[\s\S]*","urlWs":"https:\\\/\\\/srv[0-9]+\.akinator\.com:[0-9]+\\\/ws","subject_id":"[0-9]+"}]/gim;
-    const parsed = JSON.parse(data.match(regex));
+    const parsed : AkinatorThemesToPlay[] = JSON.parse(data.match(regex));
 
     if (!parsed || !parsed[0] || !parsed[0].urlWs || parsed.length <= 0) return undefined;
 
-    const found = parsed.find((theme: { translated_theme_name: string }) => theme.translated_theme_name.toLowerCase() === themeName);
+    // @ts-ignore
+    const _themeName : keyof AkinatorSubjects = themeName ? themeName.replace(themeName.charAt(0), themeName.charAt(0).toUpperCase()) : 'characters';
+
+    const subjectId = subject_ids[_themeName];
+
+    const found = parsed.find(theme => parseInt(theme.subject_id) === subjectId);
 
     const obj: AkiURL = {
       url,
@@ -143,20 +166,21 @@ export class AkinatorAPIError extends Error {
   private mapError(c: string, region: string): string {
     if (!c) return `A problem occurred with making the request.\nRequest Body: ${c}`;
 
-    if (c === 'KO - SERVER DOWN') return `Akinator servers are down for the "${region}" region. Check back later. ${c}`;
+    switch (c) {
+      case 'KO - SERVER DOWN': return `Akinator servers are down for the "${region}" region. Check back later. ${c}`;
 
-    if (c === 'KO - TECHNICAL ERROR') return `Akinator's servers have had a technical error for the "${region}" region. Check back later. ${c}`;
+      case 'KO - TECHNICAL ERROR': return `Akinator's servers have had a technical error for the "${region}" region. Check back later. ${c}`;
 
-    if (c === 'KO - INCORRECT PARAMETER') return `You inputted a wrong paramater, this could be session, region, or signature. ${c}`;
+      case 'KO - INCORRECT PARAMETER': return `You inputted a wrong paramater, this could be session, region, or signature. ${c}`;
 
-    if (c === 'KO - TIMEOUT') return `Your Akinator session has timed out. ${c}`;
+      case 'KO - TIMEOUT': return `Your Akinator session has timed out. ${c}`;
 
-    if (c === 'WARN - NO QUESTION') return `No question found. ${c}`;
+      case 'WARN - NO QUESTION': return `No question found. ${c}`;
 
-    if (c === 'KO - MISSING PARAMETERS') return `Akinator needs more parameters. Please make an issue at: ${issues}`;
-
-    return `Unknown error has occurred. Server response: ${c}`;
-
+      case 'KO - MISSING PARAMETERS': return `Akinator needs more parameters. Please make an issue at: ${issues}`;
+      
+      default: return `Unknown error has occurred. Server response: ${c}`;
+    }
   }
 }
 
