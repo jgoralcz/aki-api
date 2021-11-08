@@ -1,6 +1,7 @@
 import axios, { AxiosProxyConfig, AxiosRequestConfig } from 'axios';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import { issues, region } from '../constants/Client';
+import * as os from 'os';
 
 interface AkinatorHeaders {
   Accept: string,
@@ -100,11 +101,13 @@ const params: AkinatorParams = Object.freeze({
   timeout: 10000,
 });
 
+// Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:10.0) Gecko/20100101 Firefox/10.0
+
 const headers: AkinatorHeaders = {
   Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
   'Accept-Encoding': 'gzip, deflate',
   'Accept-Language': 'en-US,en;q=0.9',
-  'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) snap Chromium/81.0.4044.92 Chrome/81.0.4044.92 Safari/537.36',
+  'User-Agent': `Mozilla/5.0 (${os.type().replace('_', ' ')} ${os.release()}; ${os.platform()}; ${os.arch()}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36`,
   'x-requested-with': 'XMLHttpRequest',
 };
 const subject_ids : AkinatorSubjects = {
