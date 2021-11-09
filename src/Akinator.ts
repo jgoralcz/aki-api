@@ -178,8 +178,6 @@ export default class Akinator {
       this.question = parameters.question;
       this.answers = parameters.answers.map((ans) => ans.answer);
     }
-
-    (await this.win())
   }
 
   /**
