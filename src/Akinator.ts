@@ -161,7 +161,7 @@ export default class Akinator {
       this.answers = (parameters.elements || []).map((ele) => ele.element);
 
       for (let i = 0; i < this.answers.length; i += 1) {
-        this.answers[i].nsfw = ['x', 'pornstar'].includes((this.answers[i].pseudo || '').toLowerCase());
+        this.answers[i].nsfw = this.answers[i].pseudo.toLowerCase() == 'pornstar' || this.answers[i].description.toLowerCase().includes('porn');
       }
       this.guessCount = parseInt(parameters.NbObjetsPertinents, 10);
     }
