@@ -49,7 +49,7 @@ export default class Akinator {
       softConstraint: childMode === true ? 'ETAT%3D%27EN%27' : '',
       questionFilter: childMode === true ? 'cat%3D1' : '',
     };
-  
+
     if (proxyOptions) {
       this.config = {
         httpsAgent: new HttpsProxyAgent(proxyOptions),
@@ -92,6 +92,44 @@ export default class Akinator {
       this.question = parameters.step_information.question;
       this.challenge_auth = parameters.identification.challenge_auth;
       this.answers = parameters.step_information.answers.map((ans) => ans.answer);
+    }
+  }
+
+  /*
+   * Continue to guess after a "win"(e.g contine guession after a wrong result).
+   */
+  async continue(): Promise<void | Error> {
+    if (!this.uri || !this.urlApiWs) throw new Error(this.noUri);
+    if (!this.uriObj || !this.session || !this.signature) throw new Error(this.noSession);
+
+    const query = new URLSearchParams();
+    query.append('callback', jQuery + new Date().getTime());
+
+    if (this.childMode.childMod) {
+      query.append('childMod', this.childMode.childMod.toString());
+    }
+
+    query.append('session', this.session);
+    query.append('signature', this.signature);
+    query.append('step', this.currentStep.toString());
+    query.append('step', this.currentStep.toString());
+    query.append('question_filter', this.childMode.questionFilter);
+
+
+    const url = `${this.urlApiWs}/list/exclusion?${query.toString()}`;
+    const result = await request(url, 'answers', this.region, this.config);
+
+    if (result instanceof AkinatorAPIError) {
+      throw result;
+    }
+
+    const { parameters } = result;
+
+    if ('progression' in parameters) {
+      this.currentStep += 1;
+      this.progress = parseFloat(parameters.progression);
+      this.question = parameters.question;
+      this.answers = parameters.answers.map((ans) => ans.answer);
     }
   }
 
@@ -140,6 +178,8 @@ export default class Akinator {
       this.question = parameters.question;
       this.answers = parameters.answers.map((ans) => ans.answer);
     }
+
+    (await this.win())
   }
 
   /**
