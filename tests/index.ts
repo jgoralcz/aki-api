@@ -7,19 +7,19 @@ type randomNumber = (typeof rNumber)[number];
 const testGame = async (region: region, childMode?: boolean) => {
   const aki = new Aki({ region });
 
-  await aki.start();
-  console.log(`${region} ${childMode} - start: ${aki.question} ${aki.progress}`);
+  var question =  await aki.start();
+  console.log(`${region} ${childMode} - start: ${question.question} ${aki.progress}`);
 
-  await aki.step(0);
-  console.log(`${region} ${childMode} - step: ${aki.currentStep} ${aki.question} ${aki.progress}`);
+  var question = await aki.step(0);
+  console.log(`${region} ${childMode} - step: ${aki.currentStep} ${question.question} ${aki.progress}`);
 
-  await aki.back();
-  console.log(`${region} ${childMode} - back: ${aki.currentStep} ${aki.question} ${aki.progress}`);
+  var question = await aki.back();
+  console.log(`${region} ${childMode} - back: ${aki.currentStep} ${question.question} ${aki.progress}`);
 
   while (aki.progress <= 50 && aki.currentStep < 15) {
     const randomNumber = (Math.floor(Math.random() * 2)) as randomNumber;
-    await aki.step(randomNumber);
-    console.log(`${region} ${childMode} - step: ${aki.currentStep} ${aki.question} ${aki.progress}`);
+    var question = await aki.step(randomNumber);
+    console.log(`${region} ${childMode} - step: ${aki.currentStep} ${question.question} ${aki.progress}`);
 
     if (Math.floor(Math.random() * 10) < 1 && aki.currentStep > 1) {
       await aki.back();
@@ -28,8 +28,8 @@ const testGame = async (region: region, childMode?: boolean) => {
   }
 
 
-  await aki.win();
-  console.log('win:', aki.question, aki.answers);
+  const result = await aki.win();
+  console.log('win:', result.guesses);
 };
 
 (async () => {
