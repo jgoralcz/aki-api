@@ -122,7 +122,7 @@ export default class Akinator {
   }
 
   /*
-   * Continue to guess after a "win"(e.g contine guession after a wrong result).
+   * Continue to guess after a "win" (contine to play after a wrong result).
    */
   async continue(): Promise<question> {
     if (!this.uri || !this.urlApiWs) throw new Error(noUriMsg);
