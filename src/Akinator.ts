@@ -140,7 +140,7 @@ export default class Akinator {
       query.append('childMod', this.childMode.childMod.toString());
     }
 
-    const url = `${this.urlApiWs}/list/exclusion?${query.toString()}`;
+    const url = `${this.urlApiWs}/exclusion?${query.toString()}`;
     const result = await request(url, 'answers', this.region, this.config);
     if (result instanceof AkinatorAPIError) {
       throw result;
