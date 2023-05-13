@@ -14,8 +14,8 @@ type akinatorGameData = {
  * @returns {Promise<{uid: string, frontaddr: string}>} the uid and frontaddr needed to start a game
  * @throws Error an error if the uid and frontaddr cannot be found
  */
-export async function getSession(config?: AxiosRequestConfig): Promise<{ uid: string; frontaddr: string; }> {
-  const { data } = await axios.get<number, akinatorGameData>('https://en.akinator.com/game', config).catch(() => ({ data: null }));
+export async function getSession(axiosConfig: AxiosRequestConfig): Promise<{ uid: string; frontaddr: string; }> {
+  const { data } = await axios.get<number, akinatorGameData>('https://en.akinator.com/game', { ...axiosConfig }).catch(() => ({ data: null }));
 
   if (!data?.match(patternSession)) {
     throw sessionError;

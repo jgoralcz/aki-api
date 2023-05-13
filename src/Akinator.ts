@@ -2,8 +2,7 @@
 import { request, regionURL, AkinatorAPIError, getSession, guess } from './functions';
 import { jQuery, region, regions, noSessionMsg, noUriMsg } from './constants/Client';
 import { HttpsProxyAgent, HttpsProxyAgentOptions } from 'https-proxy-agent';
-import { configOptions } from './functions/Request';
-import { constants } from 'buffer';
+import { AxiosRequestConfig } from 'axios';
 
 interface question {
   question: string,
@@ -18,7 +17,7 @@ interface winResult {
 interface AkinatorConstructor {
   region: region
   childMode?: boolean
-  proxyOptions?: string | HttpsProxyAgentOptions;
+  proxyOptions?: string | HttpsProxyAgentOptions<any>; // TODO: fix any type
 }
 
 export enum answers {
@@ -50,7 +49,7 @@ export default class Akinator {
   frontaddr: string | undefined;
   signature: string | undefined;
   challenge_auth: string | undefined;
-  config: configOptions;
+  config: AxiosRequestConfig;
 
   constructor({ region, childMode, proxyOptions }: AkinatorConstructor) {
     if (!region || !regions.includes(region)) {
@@ -73,7 +72,9 @@ export default class Akinator {
       this.config = {
         httpsAgent: new HttpsProxyAgent(proxyOptions),
         proxy: false,
-      }
+      } as AxiosRequestConfig;
+    } else {
+      this.config = {} as AxiosRequestConfig;
     }
 
     this.question = '';
@@ -84,12 +85,12 @@ export default class Akinator {
   * Starts the akinator session and game.
   */
   async start(): Promise<question> {
-    const server = await regionURL(this.region);
+    const server = await regionURL(this.region, this.config);
     if (!server) throw new Error(`Could not find a server matching the region ${this.region}`);
 
     this.uri = server.url;
     this.urlApiWs = server.urlWs;
-    this.uriObj = await getSession();
+    this.uriObj = await getSession(this.config);
     if (this.uriObj instanceof Error) {
       throw this.uriObj;
     }
