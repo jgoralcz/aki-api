@@ -1,12 +1,9 @@
-import axios, { AxiosProxyConfig, AxiosRequestConfig } from 'axios';
+import axios, { AxiosProxyConfig, AxiosRequestConfig, AxiosRequestHeaders } from 'axios';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import { issues, region } from '../constants/Client';
 import * as os from 'os';
 
 interface AkinatorHeaders {
-  Accept: string,
-  'Accept-Encoding': string,
-  'Accept-Language': string,
   'User-Agent': string,
   'x-requested-with': string
 }
@@ -103,14 +100,11 @@ const params: AkinatorParams = Object.freeze({
 
 // Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:10.0) Gecko/20100101 Firefox/10.0
 
-const headers: AkinatorHeaders = {
-  Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-  'Accept-Encoding': 'gzip, deflate',
-  'Accept-Language': 'en-US,en;q=0.9',
+const headers = {
   'User-Agent': `Mozilla/5.0 (${os.type().replace('_', ' ')} ${os.release()}; ${os.platform()}; ${os.arch()}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36`,
   'x-requested-with': 'XMLHttpRequest',
 };
-const subject_ids : AkinatorSubjects = {
+const subject_ids: AkinatorSubjects = {
   characters: 1,
   Objects: 2,
   Animals: 14
@@ -127,20 +121,20 @@ interface AkiURL {
  * @param {string} region the requested region to be parsed
  * @return {object} obj with url and urlWs or undefined
  */
-const getServer = async (region: region): Promise<AkiURL | undefined> => {
+const getServer = async (region: region, axiosConfig: AxiosRequestConfig): Promise<AkiURL | undefined> => {
   try {
     const split = region.split('_');
     const [language, themeName] = split;
 
     const url = `https://${language}.akinator.com`;
-    const { data } = await axios.get(url);
+    const { data } = await axios.get(url, { ...axiosConfig });
 
     const regex = /\[{"translated_theme_name":"[\s\S]*","urlWs":"https:\\\/\\\/srv[0-9]+\.akinator\.com:[0-9]+\\\/ws","subject_id":"[0-9]+"}]/gim;
-    const parsed : AkinatorThemesToPlay[] = JSON.parse(data.match(regex));
+    const parsed: AkinatorThemesToPlay[] = JSON.parse(data.match(regex));
 
     if (!parsed || !parsed[0] || !parsed[0].urlWs || parsed.length <= 0) return undefined;
 
-    const _themeName : keyof AkinatorSubjects = themeName ? themeName.replace(themeName.charAt(0), themeName.charAt(0).toUpperCase()) : 'characters';
+    const _themeName: keyof AkinatorSubjects = themeName ? themeName.replace(themeName.charAt(0), themeName.charAt(0).toUpperCase()) : 'characters';
 
     const subjectId = subject_ids[_themeName];
 
@@ -180,21 +174,15 @@ export class AkinatorAPIError extends Error {
       case 'WARN - NO QUESTION': return `No question found. ${c}`;
 
       case 'KO - MISSING PARAMETERS': return `Akinator needs more parameters. Please make an issue at: ${issues}`;
-      
+
       default: return `Unknown error has occurred. Server response: ${c}`;
     }
   }
 }
 
-export type configOptions = {
-  httpsAgent: HttpsProxyAgent | undefined;
-  proxy: boolean;
-} | undefined;
-
 // example output: jQuery331023608747682107778_1615444627875({"completion":"OK","parameters":{"identification":{"channel":0,"session":"459","signature":"223731835","challenge_auth":"8ebe521c-5991-4625-b081-6066352649e5"},"step_information":{"question":"Does your character really exist?","answers":[{"answer":"Yes"},{"answer":"No"},{"answer":"Don't know"},{"answer":"Probably"},{"answer":"Probably not"}],"step":"0","progression":"0.00000","questionid":"266","infogain":"0.607602"}}}
-export const request = async (url: string, checkParamProperty: checkParamProperty, region: region, config: configOptions): Promise<AkinatorAPIError | AkinatorResult> => {
-  const axiosConfig = (config || {}) as AxiosRequestConfig;
-  
+export const request = async (url: string, checkParamProperty: checkParamProperty, region: region, axiosConfig: AxiosRequestConfig): Promise<AkinatorAPIError | AkinatorResult> => {
+
   const { status, data } = await axios.get<number, AkinatorPromise>(url, { headers, params, ...axiosConfig });
 
   if (status !== 200 || !data) {
@@ -215,6 +203,7 @@ export const request = async (url: string, checkParamProperty: checkParamPropert
 /**
  * Returns the url from the correct region.
  * @param userRegion the region provided
+ * @param axiosConfig the proxy config for axios
  * @returns {Promise<AkiURL>} the generated url for that region
  */
-export const regionURL = async (userRegion: region): Promise<AkiURL | undefined> => getServer((userRegion.toLowerCase()) as region);
+export const regionURL = async (userRegion: region, axiosConfig: AxiosRequestConfig): Promise<AkiURL | undefined> => getServer((userRegion.toLowerCase() as region), axiosConfig);
