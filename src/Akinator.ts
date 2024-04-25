@@ -1,18 +1,11 @@
 
-import { request, regionURL, AkinatorAPIError, getSession, guess } from './functions';
-import { jQuery, region, regions, noSessionMsg, noUriMsg } from './constants/Client';
+import { request, AkinatorAPIError } from './functions';
+import { region, regions, noSessionMsg, noUriMsg } from './constants/Client';
 import { HttpsProxyAgent, HttpsProxyAgentOptions } from 'https-proxy-agent';
-import { AxiosRequestConfig } from 'axios';
-
-interface question {
-  question: string,
-  answers: ('Yes' | 'No' | 'Don\'t Know' | 'Probably' | 'Probably not' | string)[]
-}
-
-interface winResult {
-  guessCount: number,
-  guesses: guess[]
-}
+import axios, { AxiosRequestConfig } from 'axios';
+import { decode as decodeHTML } from 'html-entities';
+import { AkinatorResult, AkinatorResultGuess } from './functions/Request';
+import * as FormData from 'form-data';
 
 interface AkinatorConstructor {
   region: region
@@ -31,25 +24,21 @@ export enum answers {
 export default class Akinator {
   currentStep: number;
   region: region;
-  uri: string | undefined;
-  urlApiWs: string | undefined;
-  uriObj: { uid: string, frontaddr: string } | undefined;
-  session: string | undefined;
+  uri?: string;
+  session?: string;
   progress: number;
-  childMode: { childMod: boolean; softConstraint: string; questionFilter: string; };
+  childMode: boolean;
+  step_last_proposition: string;
 
-  /** @deprecated use the `guesses` property from `win()` instead. */
-  answers: ('Yes' | 'No' | 'Don\'t Know' | 'Probably' | 'Probably not')[] | guess[];
+  answers: string[]
   /** @deprecated use the `guessCount` property from `start()` and `step()` instead */
   guessCount: number;
   /** @deprecated use the `question` property from `start()` and `step()` instead */
-  question: string | undefined;
+  question?: string;
 
-  uid: string | undefined;
-  frontaddr: string | undefined;
-  signature: string | undefined;
-  challenge_auth: string | undefined;
+  signature?: string;
   config: AxiosRequestConfig;
+  guess?: AkinatorResultGuess;
 
   constructor({ region, childMode, proxyOptions }: AkinatorConstructor) {
     if (!region || !regions.includes(region)) {
@@ -59,14 +48,12 @@ export default class Akinator {
     this.currentStep = 0;
     this.region = region;
     this.uri = undefined;
-    this.urlApiWs = undefined;
+    this.guess = undefined;
     this.progress = 0.00;
+    this.step_last_proposition = '';
     this.guessCount = 0;
-    this.childMode = {
-      childMod: childMode === true,
-      softConstraint: childMode === true ? encodeURIComponent("ETAT='EN'") : '',
-      questionFilter: childMode === true ? encodeURIComponent('cat=1') : '',
-    };
+    this.childMode = childMode === true;
+    this.uri = `https://${this.region}.akinator.com`;
 
     if (proxyOptions) {
       this.config = {
@@ -84,211 +71,141 @@ export default class Akinator {
   /**
   * Starts the akinator session and game.
   */
-  async start(): Promise<question> {
-    const server = await regionURL(this.region, this.config);
-    if (!server) throw new Error(`Could not find a server matching the region ${this.region}`);
+  async start() {
+    const url = `${this.uri}/game`;
 
-    this.uri = server.url;
-    this.urlApiWs = server.urlWs;
-    this.uriObj = await getSession(this.config);
-    if (this.uriObj instanceof Error) {
-      throw this.uriObj;
+    const formData = new FormData();
+    formData.append('sid', '1');
+    formData.append('cm', this.childMode.toString());
+
+    const { status, data: text } = await axios.postForm(url, formData, this.config);
+    if (status !== 200) {
+      throw new AkinatorAPIError('starting session error...', this.region);
     }
+    this.question = text.match(/<p class="question-text" id="question-label">(.+)<\/p>/)[1];
+    this.session = text.match(/session: '(.+)'/)[1];
+    this.signature = text.match(/signature: '(.+)'/)[1];
+    this.answers = [
+      decodeHTML(text.match(/<a class="li-game" href="#" id="a_yes" onclick="chooseAnswer\(0\)">(.+)<\/a>/)[1]),
+      decodeHTML(text.match(/<a class="li-game" href="#" id="a_no" onclick="chooseAnswer\(1\)">(.+)<\/a>/)[1]),
+      decodeHTML(text.match(/<a class="li-game" href="#" id="a_dont_know" onclick="chooseAnswer\(2\)">(.+)<\/a>/)[1]),
+      decodeHTML(text.match(/<a class="li-game" href="#" id="a_probably" onclick="chooseAnswer\(3\)">(.+)<\/a>/)[1]),
+      decodeHTML(text.match(/<a class="li-game" href="#" id="a_probaly_not" onclick="chooseAnswer\(4\)">(.+)<\/a>/)[1])
+    ];
 
-    this.uid = this.uriObj.uid;
-    this.frontaddr = this.uriObj.frontaddr;
-
-    const url = `${this.uri}/new_session?callback=${jQuery + new Date().getTime()}&urlApiWs=${this.urlApiWs}&partner=1&childMod=${this.childMode.childMod}&player=website-desktop&uid_ext_session=${this.uid}&frontaddr=${this.frontaddr}&constraint=ETAT<>'AV'&soft_constraint=${this.childMode.softConstraint}&question_filter=${this.childMode.questionFilter}`;
-    const result = await request(url, 'identification', this.region, this.config);
-    if (result instanceof AkinatorAPIError) {
-      throw result;
-    }
-
-    const { parameters } = result;
-
-    if ('identification' in parameters) {
-      this.session = parameters.identification.session;
-      this.signature = parameters.identification.signature;
-      this.question = parameters.step_information.question;
-      this.challenge_auth = parameters.identification.challenge_auth;
-      this.answers = parameters.step_information.answers.map((ans) => ans.answer);
-
-      return {
-        answers: parameters.step_information.answers.map((ans) => ans.answer),
-        question: parameters.step_information.question
-      }
-    } else {
-      throw new AkinatorAPIError(result, this.region);
-    }
+    return this;
   }
 
   /*
    * Continue to guess after a "win" (contine to play after a wrong result).
    */
-  async continue(): Promise<question> {
-    if (!this.uri || !this.urlApiWs) throw new Error(noUriMsg);
-    if (!this.uriObj || !this.session || !this.signature) throw new Error(noSessionMsg);
-
-    const query = new URLSearchParams({
-      callback: jQuery + new Date().getTime(),
-      session: this.session,
-      signature: this.signature,
-      step: this.currentStep.toString(),
-      question_filter: this.childMode.questionFilter
-    });
-
-    if (this.childMode.childMod) {
-      query.append('childMod', this.childMode.childMod.toString());
+  async continue(): Promise<AkinatorResult | AkinatorAPIError> {
+    if (!this.uri) {
+      throw new Error(noUriMsg);
     }
+    if (!this.session || !this.signature) {
+      throw new Error(noSessionMsg);
+    }
+    const formData = new FormData();
+    formData.append('step', this.currentStep.toString());
+    formData.append('progression', this.progress.toString());
+    formData.append('sid', '1');
+    formData.append('cm', this.childMode.toString());
+    formData.append('session', this.session);
+    formData.append('signature', this.signature);
 
-    const url = `${this.urlApiWs}/exclusion?${query.toString()}`;
-    const result = await request(url, 'answers', this.region, this.config);
+    const url = `${this.uri}/exclude`;
+    const result = await request(url, formData, this.config) as AkinatorResult;
     if (result instanceof AkinatorAPIError) {
       throw result;
     }
 
-    const { parameters } = result;
+    this.progress = parseFloat(result.progression);
+    this.question = result.question;
+    this.currentStep = parseInt(result.step, 10);
 
-    if ('progression' in parameters) {
-      this.currentStep += 1;
-      this.progress = parseFloat(parameters.progression);
-      this.question = parameters.question;
-      this.answers = parameters.answers.map((ans) => ans.answer);
-
-      return {
-        answers: parameters.answers.map((ans) => ans.answer),
-        question: parameters.question
-      }
-    } else {
-      throw new AkinatorAPIError(result, this.region);
-    }
+    return result;
   }
 
   /**
    * Gets the next question for the akinator session.
    * @param {answers} answerID the answer to the question
    */
-  async step(answer: answers): Promise<question> {
-    if (!this.uri || !this.urlApiWs) throw new Error(noUriMsg);
-    if (!this.uriObj || !this.session || !this.signature || !this.frontaddr) throw new Error(noSessionMsg);
+  async step(answer: answers): Promise<AkinatorResult | AkinatorResultGuess | AkinatorAPIError> {
+    if (!this.uri) {
+      throw new Error(noUriMsg);
+    }
+    if (!this.session || !this.signature) {
+      throw new Error(noSessionMsg);
+    }
 
-    const query = new URLSearchParams({
-      callback: jQuery + new Date().getTime(),
-      urlApiWs: this.urlApiWs,
-      childMod: this.childMode.childMod.toString(),
-      session: this.session,
-      signature: this.signature,
-      step: this.currentStep.toString(),
-      answer: answer.toString(),
-      frontaddr: this.frontaddr,
-      question_filter: this.childMode.questionFilter
-    })
+    const formData = new FormData();
+    formData.append('step', this.currentStep.toString());
+    formData.append('progression', this.progress.toString());
+    formData.append('sid', '1');
+    formData.append('cm', this.childMode.toString());
+    formData.append('answer', answer.toString());
+    formData.append('step_last_proposition', '');
+    formData.append('session', this.session);
+    formData.append('signature', this.signature);
 
-    const url = `${this.uri}/answer_api?${query.toString()}`;
+    const url = `${this.uri}/answer`;
 
-    const result = await request(url, 'answers', this.region, this.config);
+    const result = await request(url, formData, this.config);
 
     if (result instanceof AkinatorAPIError) {
       throw result;
     }
 
-    const { parameters } = result;
+    const guess = result as AkinatorResultGuess;
 
-    if ('progression' in parameters) {
-      this.currentStep += 1;
-      this.progress = parseFloat(parameters.progression);
-      this.question = parameters.question;
-      this.answers = parameters.answers.map((ans) => ans.answer);
-
-      return {
-        answers: parameters.answers.map((ans) => ans.answer),
-        question: parameters.question
-      }
-    } else {
-      throw new AkinatorAPIError(result, this.region);
+    // akinator has guessed
+    if (guess.id_base_proposition) {
+      this.guess = guess;
+      return guess;
     }
+
+    // a normal step
+
+    const akinatorResult = result as AkinatorResult;
+
+    this.currentStep = parseInt(akinatorResult.step, 10);
+    this.question = akinatorResult.question;
+    this.progress = parseFloat(akinatorResult.progression);
+
+    return akinatorResult;
   }
 
   /**
    * Reverts the game back a previous step.
    */
-  async back(): Promise<question> {
-    if (!this.uri || !this.urlApiWs) throw new Error(noUriMsg);
-    if (!this.uriObj || !this.session || !this.signature) throw new Error(noSessionMsg);
+  async back(): Promise<AkinatorResult | AkinatorAPIError> {
+    if (!this.uri) {
+      throw new Error(noUriMsg);
+    }
+    if (!this.session || !this.signature) {
+      throw new Error(noSessionMsg);
+    }
 
-    const query = new URLSearchParams({
-      callback: jQuery + new Date().getTime(),
-      session: this.session,
-      childMod: this.childMode.childMod.toString(),
-      signature: this.signature,
-      step: this.currentStep.toString(),
-      answer: '-1',
-      question_filter: this.childMode.questionFilter
-    })
+    const formData = new FormData();
+    formData.append('step', this.currentStep.toString());
+    formData.append('progression', this.progress.toString());
+    formData.append('sid', '1');
+    formData.append('cm', this.childMode.toString());
+    formData.append('session', this.session);
+    formData.append('signature', this.signature);
 
-    const url = `${this.urlApiWs}/cancel_answer?${query.toString()}`;
+    const url = `${this.uri}/cancel_answer`;
 
-    const result = await request(url, 'answers', this.region, this.config);
+    const result = await request(url, formData, this.config) as AkinatorResult;
     if (result instanceof AkinatorAPIError) {
       throw result;
     }
 
-    const { parameters } = result;
+    this.currentStep = parseInt(result.step, 10);
+    this.progress = parseFloat(result.progression);
+    this.question = result.question;
 
-    if ('progression' in parameters) {
-      this.currentStep -= 1;
-      this.progress = parseFloat(parameters.progression);
-      this.question = parameters.question;
-      this.answers = parameters.answers.map((ans) => ans.answer);
-
-      return {
-        answers: parameters.answers.map((ans) => ans.answer),
-        question: parameters.question
-      }
-    } else {
-      throw new AkinatorAPIError(result, this.region);
-    }
-  }
-
-  /**
-   * The akinator attempts to make a guess and win the game.
-   */
-  async win(): Promise<winResult> {
-    if (!this.uri || !this.urlApiWs) throw new Error(noUriMsg);
-    if (!this.uriObj || !this.signature || !this.session) throw new Error(noSessionMsg);
-
-    const query = new URLSearchParams({
-      callback: jQuery + new Date().getTime(),
-      signature: this.signature,
-      step: this.currentStep.toString(),
-      session: this.session
-    })
-
-    const url = `${this.urlApiWs}/list?${query.toString()}`;
-    const result = await request(url, 'elements', this.region, this.config);
-    if (result instanceof AkinatorAPIError) {
-      throw result;
-    }
-
-    const { parameters } = result;
-
-    if ('elements' in parameters) {
-      const answers = (parameters.elements || []).map((ele) => ele.element);
-
-      for (let i = 0; i < answers.length; i += 1) {
-        answers[i].nsfw = answers[i].valide_contrainte == '0';
-      }
-
-      const guessCount = parseInt(parameters.NbObjetsPertinents, 10)
-      this.answers = answers;
-      this.guessCount = guessCount;
-
-      return {
-        guesses: answers,
-        guessCount: guessCount
-      };
-    } else {
-      throw new AkinatorAPIError(result, this.region);
-    }
+    return result;
   }
 }

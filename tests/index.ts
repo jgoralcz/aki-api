@@ -1,5 +1,7 @@
 /* eslint-disable */
 import { Aki, regions, region } from '../src';
+import { AkinatorAPIError } from '../src/functions';
+import { AkinatorResult, AkinatorResultGuess } from '../src/functions/Request';
 
 const rNumber = [0, 1, 2, 3, 4] as const;
 type randomNumber = (typeof rNumber)[number];
@@ -7,29 +9,45 @@ type randomNumber = (typeof rNumber)[number];
 const testGame = async (region: region, childMode?: boolean) => {
   const aki = new Aki({ region });
 
-  var question =  await aki.start();
-  console.log(`${region} ${childMode} - start: ${question.question} ${aki.progress}`);
+  const akiSession = await aki.start();
+  console.log(`${region} ${childMode} - start: ${akiSession.question} ${akiSession.progress}`);
 
-  var question = await aki.step(0);
-  console.log(`${region} ${childMode} - step: ${aki.currentStep} ${question.question} ${aki.progress}`);
+  let continued = false;
+  while (!aki.guess && aki.currentStep < 20) {
+    const randomNumber = aki.currentStep <= 0 ? 0 : (Math.floor(Math.random() * 2)) as randomNumber;
+    const stepResult = await aki.step(randomNumber);
+    if (stepResult instanceof AkinatorAPIError) {
+      console.error(`failed step ${randomNumber}`);
+      return;
+    }
 
-  var question = await aki.back();
-  console.log(`${region} ${childMode} - back: ${aki.currentStep} ${question.question} ${aki.progress}`);
+    const guess = stepResult as AkinatorResultGuess;
 
-  while (aki.progress <= 50 && aki.currentStep < 15) {
-    const randomNumber = (Math.floor(Math.random() * 2)) as randomNumber;
-    var question = await aki.step(randomNumber);
-    console.log(`${region} ${childMode} - step: ${aki.currentStep} ${question.question} ${aki.progress}`);
+    // akinator has guessed
+    if (guess.id_base_proposition) {
+      console.log('win:', guess);
+      if (continued) {
+        return guess;
+      }
+
+      console.log('continuing...');
+      await aki.continue();
+      continued = true;
+    }
+
+    const stepOne = stepResult as AkinatorResult;
+    console.log(`${region} ${childMode} - step: ${aki.currentStep} ${stepOne.question} ${aki.progress}`);
 
     if (Math.floor(Math.random() * 10) < 1 && aki.currentStep > 1) {
-      await aki.back();
-      console.log(`${region} ${childMode} - back: ${aki.currentStep} ${aki.question} ${aki.progress}`);
+      const backResult = await aki.back();
+      if (backResult instanceof AkinatorAPIError) {
+        console.error('failed back');
+        return;
+      }
+      console.log(`${region} ${childMode} - back: ${aki.currentStep} ${backResult.question} ${aki.progress}`);
     }
   }
 
-
-  const result = await aki.win();
-  console.log('win:', result.guesses);
 };
 
 (async () => {
